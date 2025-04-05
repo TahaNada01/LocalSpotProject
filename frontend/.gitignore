@@ -1,0 +1,18 @@
+# Global
+node_modules/
+dist/
+.env
+
+# Frontend
+/frontend/node_modules/
+/frontend/dist/
+
+# Backend
+/backend/target/
+/backend/.mvn/
+/backend/*.iml
+
+# IDEs
+*.log
+*.idea/
+.vscode/
