@@ -31,7 +31,8 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void deleteById(Integer id) {
-        userRepository.deleteById(id);
+    public void deleteUser(String email) {
+            User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("L'utilisateur n'existe pas"));
+            userRepository.delete(user);
     }
 }
