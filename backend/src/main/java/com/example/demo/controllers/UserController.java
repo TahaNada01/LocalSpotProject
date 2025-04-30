@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
+import com.example.demo.dto.UpdateUserRequest;
 import com.example.demo.entities.User;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.services.UserService;
@@ -53,10 +54,24 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mot de passe ou Email incorrect");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+
 
         return ResponseEntity.ok(new LoginResponse(token));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().body("Aucun token fourni");
+        }
+
+        String token = authHeader.substring(7);
+
+        return ResponseEntity.ok("Déconnexion réussie");
+    }
+
 
     //Suppression
     @DeleteMapping("/delete")
@@ -64,5 +79,30 @@ public class UserController {
         userService.deleteUser(user.getEmail());
         return ResponseEntity.ok().body("Utilisateur supprimé.");
     }
+
+    //Récuperer les infos de l'utilisateur connecté
+    @GetMapping("/me")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(user);
+    }
+
+    //update des infos user
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@AuthenticationPrincipal User currentUser,
+                                        @RequestBody UpdateUserRequest updateData) {
+
+        User updated = userService.updateUserInfo(currentUser.getEmail(), updateData);
+
+        // Re-génère un nouveau token après mise à jour
+        String newToken = jwtUtil.generateToken(updated.getEmail(), updated.getRole());
+
+        return ResponseEntity.ok(new LoginResponse(newToken));
+    }
+
+
+
+
+
+
 
 }
