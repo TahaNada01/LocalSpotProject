@@ -1,0 +1,23 @@
+<h2>Inscription</h2>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+  <label>Nom :</label>
+  <input type="text" formControlName="nom" />
+
+  <label>Email :</label>
+  <input type="email" formControlName="email" />
+
+  <label>Mot de passe :</label>
+  <input type="password" formControlName="motDePasse" />
+
+  <label>Adresse :</label>
+  <input type="text" formControlName="adresse" />
+
+  <label>Ville :</label>
+  <input type="text" formControlName="ville" />
+
+  <label>Photo de profil (URL) :</label>
+  <input type="text" formControlName="profilPhoto" />
+
+  <button type="submit" [disabled]="registerForm.invalid">S'inscrire</button>
+</form>
