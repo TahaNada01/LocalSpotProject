@@ -1,7 +1,7 @@
 import {
   Title
-} from "./chunk-IZFWR4HX.js";
-import "./chunk-YTXDVQA3.js";
+} from "./chunk-WGI6C2NU.js";
+import "./chunk-IR3ZUSDD.js";
 import {
   HashLocationStrategy,
   LOCATION_INITIALIZED,
@@ -9,10 +9,10 @@ import {
   LocationStrategy,
   PathLocationStrategy,
   ViewportScroller
-} from "./chunk-FH5SAPX5.js";
+} from "./chunk-AXJJTSM4.js";
 import {
   DOCUMENT
-} from "./chunk-5CD2VJG4.js";
+} from "./chunk-EJD3TYDU.js";
 import {
   APP_BOOTSTRAP_LISTENER,
   APP_INITIALIZER,
@@ -53,8 +53,6 @@ import {
   Subscription,
   Version,
   ViewContainerRef,
-  __spreadProps,
-  __spreadValues,
   afterNextRender,
   booleanAttribute,
   catchError,
@@ -112,9 +110,13 @@ import {
   ɵɵloadQuery,
   ɵɵqueryRefresh,
   ɵɵsanitizeUrlOrResourceUrl
-} from "./chunk-3ZLQZU5L.js";
+} from "./chunk-YBHDUQOF.js";
+import {
+  __spreadProps,
+  __spreadValues
+} from "./chunk-WDMUDEB6.js";
 
-// ../../../../node_modules/@angular/router/fesm2022/router-LSBBtrLI.mjs
+// node_modules/@angular/router/fesm2022/router-LSBBtrLI.mjs
 var PRIMARY_OUTLET = "primary";
 var RouteTitleKey = Symbol("RouteTitle");
 var ParamsAsMap = class {
@@ -4743,7 +4745,7 @@ function isPublicRouterEvent(e) {
   return !(e instanceof BeforeActivateRoutes) && !(e instanceof RedirectRequest);
 }
 
-// ../../../../node_modules/@angular/router/fesm2022/router_module-C0FJ-J6L.mjs
+// node_modules/@angular/router/fesm2022/router_module-C0FJ-J6L.mjs
 var RouterLink = class _RouterLink {
   router;
   route;
@@ -5890,7 +5892,7 @@ function provideRouterInitializer() {
   ];
 }
 
-// ../../../../node_modules/@angular/router/fesm2022/router.mjs
+// node_modules/@angular/router/fesm2022/router.mjs
 function mapToCanMatch(providers) {
   return providers.map((provider) => (...params) => inject(provider).canMatch(...params));
 }
