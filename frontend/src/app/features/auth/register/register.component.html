@@ -1,23 +1,56 @@
-<h2>Inscription</h2>
+<div class="register-container">
+  <!-- Colonne gauche (formulaire) -->
+  <div class="register-form">
+    <h1>LocalSpot</h1>
+    <p>Discover and connect with local communities</p>
 
-<form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
-  <label>Nom :</label>
-  <input type="text" formControlName="nom" />
+    <div class="switch-tabs">
+      <a [routerLink]="'/auth/login'" routerLinkActive="active">Login</a>
+      <a [routerLink]="'/auth/register'" routerLinkActive="active">Register</a>
+    </div>
+    
 
-  <label>Email :</label>
-  <input type="email" formControlName="email" />
+    <h2>Create an account</h2>
 
-  <label>Mot de passe :</label>
-  <input type="password" formControlName="motDePasse" />
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <label>Username</label>
+      <input type="text" formControlName="nom" placeholder="Choose a username" />
 
-  <label>Adresse :</label>
-  <input type="text" formControlName="adresse" />
+      <label>Email</label>
+      <input type="email" formControlName="email" placeholder="Enter your email address" />
 
-  <label>Ville :</label>
-  <input type="text" formControlName="ville" />
+      <label>Password</label>
+      <input type="password" formControlName="motDePasse" placeholder="Create a password" />
 
-  <label>Photo de profil (URL) :</label>
-  <input type="text" formControlName="profilPhoto" />
+      <label>City</label>
+      <input type="text" formControlName="ville" placeholder="Enter your city" />
 
-  <button type="submit" [disabled]="registerForm.invalid">S'inscrire</button>
-</form>
+      <button type="submit" [disabled]="registerForm.invalid">Create Account</button>
+
+      <div *ngIf="successMessage" style="background:#dcfce7; color:#166534; padding: 1rem; margin-top:1rem; border-radius: 5px;">
+        {{ successMessage }}
+      </div>
+
+      <div *ngIf="errorMessage" style="background:#fee2e2; color:#991b1b; padding: 1rem; margin-top:1rem; border-radius: 5px;">
+        {{ errorMessage }}
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Colonne droite (info) -->
+  <div class="register-info">
+    <h2>Discover Local Spots for Remote Workers</h2>
+    <ul>
+      <li>Find local workshops, classes and events</li>
+      <li>Discover the best cafés and coworking spaces</li>
+      <li>Connect with other remote workers</li>
+      <li>Share your favorite spots with the community</li>
+    </ul>
+
+    <blockquote>
+      "LocalSpot helped me find amazing coworking spaces and meet other remote workers in my city!"
+    </blockquote>
+    <cite>— Sarah K, Product Designer</cite>
+  </div>
+</div>

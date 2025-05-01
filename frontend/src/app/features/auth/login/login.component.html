@@ -1,0 +1,43 @@
+<div class="register-container">
+    <!-- Colonne gauche : formulaire -->
+    <div class="register-form">
+      <h1>LocalSpot</h1>
+      <p>Discover and connect with local communities</p>
+  
+      <div class="switch-tabs">
+        <a [routerLink]="'/auth/login'" routerLinkActive="active">Login</a>
+        <a [routerLink]="'/auth/register'" routerLinkActive="active">Register</a>
+      </div>
+  
+      <h2>Welcome back</h2>
+  
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="Enter your email" />
+  
+        <label>Password</label>
+        <input type="password" formControlName="motDePasse" placeholder="Enter your password" />
+  
+        <button type="submit" [disabled]="loginForm.invalid">Log in</button>
+  
+        <p *ngIf="errorMessage" style="color: #ef4444">{{ errorMessage }}</p>
+      </form>
+    </div>
+  
+    <!-- Colonne droite : illustration -->
+    <div class="register-info">
+      <h2>LocalSpot makes remote work social</h2>
+      <ul>
+        <li>Find trusted places to work</li>
+        <li>Meet others near you</li>
+        <li>Access exclusive events</li>
+        <li>Join the remote revolution</li>
+      </ul>
+  
+      <blockquote>
+        "Since joining LocalSpot, I’ve met amazing people and found inspiring places to work from."
+      </blockquote>
+      <cite>— Alex B, Developer</cite>
+    </div>
+  </div>
+  
