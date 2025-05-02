@@ -1,0 +1,14 @@
+.main-layout {
+    display: flex;
+  }
+  
+  app-sidebar {
+    flex-shrink: 0;
+    width: 250px; // taille de ta sidebar
+    height: 100vh;
+  }
+  
+  router-outlet {
+    flex-grow: 1;
+  }
+  

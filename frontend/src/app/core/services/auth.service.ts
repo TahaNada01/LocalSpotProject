@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { LoginRequest } from '../../core/models/login-request.model';
 import { LoginResponse } from '../../core/models/login-response.model';
 import { tap } from 'rxjs/operators';
+import { User } from '../../core/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,5 +42,10 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
   }
+
+  getCurrentUser(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/me`);
+  }  
+    
   
 }
