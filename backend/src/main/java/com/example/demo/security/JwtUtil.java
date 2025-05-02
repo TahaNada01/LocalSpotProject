@@ -29,6 +29,16 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateRefreshToken(String email) {
+        long refreshExpirationTime = 1000 * 60 * 60 * 24 * 7; // 7 jours
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationTime))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public String extractEmail(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())

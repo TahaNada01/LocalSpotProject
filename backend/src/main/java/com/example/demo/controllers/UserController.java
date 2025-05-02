@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -54,11 +55,30 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mot de passe ou Email incorrect");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+        String accessToken = jwtUtil.generateToken(user.getEmail(), user.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getEmail());
 
-
-        return ResponseEntity.ok(new LoginResponse(token));
+        return ResponseEntity.ok(new LoginResponse(accessToken, refreshToken));
     }
+
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refreshToken");
+
+        if (!jwtUtil.isTokenValid(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+        }
+
+        String email = jwtUtil.extractEmail(refreshToken);
+        Optional<User> userOpt = userService.findByEmail(email);
+
+        if (userOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+
+        String newAccessToken = jwtUtil.generateToken(email, userOpt.get().getRole());
+        return ResponseEntity.ok(new LoginResponse(newAccessToken, refreshToken)); // refresh token same
+    }
+
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
@@ -95,14 +115,11 @@ public class UserController {
 
         // Re-génère un nouveau token après mise à jour
         String newToken = jwtUtil.generateToken(updated.getEmail(), updated.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(updated.getEmail());
 
-        return ResponseEntity.ok(new LoginResponse(newToken));
+
+        return ResponseEntity.ok(new LoginResponse(newToken, refreshToken));
     }
-
-
-
-
-
 
 
 }

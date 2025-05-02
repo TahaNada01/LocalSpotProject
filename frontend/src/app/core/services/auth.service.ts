@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../../core/models/login-request.model';
 import { LoginResponse } from '../../core/models/login-response.model';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -17,11 +18,26 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 
-  // ✅ Appel pour la connexion (login)
-  login(data: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, data);
+  // Appel pour la connexion (login)
+  login(credentials: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials).pipe(
+      tap((res: LoginResponse) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('refreshToken', res.refreshToken);
+      })
+    );
   }
-
+  
+  refreshToken(): Observable<LoginResponse> {
+    const refreshToken = localStorage.getItem('refreshToken');
+    return this.http.post<LoginResponse>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
+      tap((res: LoginResponse) => {
+        localStorage.setItem('token', res.token);
+      })
+    );
+  }
+  
+  
   logout(): void {
     localStorage.removeItem('token');
   }
