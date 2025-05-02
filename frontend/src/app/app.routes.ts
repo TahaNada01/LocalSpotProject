@@ -1,12 +1,24 @@
 import { Routes } from '@angular/router';
-import { RegisterComponent } from '../app/features/auth/register/register.component';
-import { LoginComponent } from '../app/features/auth/login/login.component';
-import { HomeComponent } from '../app/features/home/home.component';
-
+import { RegisterComponent } from './features/auth/register/register.component';
+import { LoginComponent } from './features/auth/login/login.component';
+import { MainLayoutComponent } from './layouts/main-layout.component';
+import { HomeComponent } from './features/home/home.component';
+import { ProfileComponent } from './features/profile/profile.component';
 
 export const appRoutes: Routes = [
+    { path: '', redirectTo: 'auth/login', pathMatch: 'full' }, 
+  
+    // Pages sans sidebar
     { path: 'auth/register', component: RegisterComponent },
     { path: 'auth/login', component: LoginComponent },
-    {path: 'home', component: HomeComponent },
-    { path: '', redirectTo: 'auth/register', pathMatch: 'full' } //route par défaut
-];
+  
+    {
+      path: '',
+      component: MainLayoutComponent,
+      children: [
+        { path: 'home', component: HomeComponent },
+        { path: 'profile', component: ProfileComponent },
+      ]
+    }
+  ];
+  

@@ -1,0 +1,38 @@
+<div class="sidebar">
+    <div>
+      <div class="logo">LocalSpot</div>
+      <div class="nav-links">
+        <a routerLink="/home" routerLinkActive="active" class="nav-link" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fa fa-home"></i> Home
+        </a>
+  
+        <a routerLink="/explore" routerLinkActive="active" class="nav-link" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fa fa-search"></i> Explore
+        </a>
+  
+        <a routerLink="/map" routerLinkActive="active" class="nav-link" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fa fa-map"></i> Map
+        </a>
+  
+        <a routerLink="/profile" routerLinkActive="active" class="nav-link" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fa fa-user"></i> Profile
+        </a>
+  
+        <a routerLink="/saved" routerLinkActive="active" class="nav-link" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fa fa-bookmark"></i> Saved
+        </a>
+  
+        <a routerLink="/community" routerLinkActive="active" class="nav-link" [routerLinkActiveOptions]="{ exact: true }">
+          <i class="fa fa-users"></i> Community
+        </a>
+      </div>
+    </div>
+  
+    <div>
+      <div class="nav-link"><i class="fa fa-moon"></i></div>
+      <div class="nav-link" (click)="logout()">
+        <i class="fa fa-sign-out"></i> Logout
+      </div>
+    </div>
+  </div>
+  

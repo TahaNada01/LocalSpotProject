@@ -1,0 +1,31 @@
+<div class="profile-container">
+    <div class="profile-header">
+      <div class="profile-info">
+        <div class="avatar">
+          <img *ngIf="user.profilPhoto" [src]="user.profilPhoto" alt="Avatar" />
+          <span *ngIf="!user.profilPhoto">{{ user.nom.charAt(0) || 'U' }}</span>
+        </div>
+        <div class="user-text">
+          <h2>{{ user.nom }}</h2>
+          <p class="email">{{ user.email }}</p>
+          <p class="city">{{ user.ville }}</p>
+        </div>
+      </div>
+  
+      <!-- Le bouton doit être ici -->
+      <button class="edit-btn">Edit Profile</button>
+    </div>
+  
+    <div class="tabs">
+      <div class="tab" [class.active]="activeTab === 'places'" (click)="activeTab = 'places'">Places</div>
+      <div class="tab" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">Reviews</div>
+      <div class="tab" [class.active]="activeTab === 'favorites'" (click)="activeTab = 'favorites'">Favorites</div>
+    </div>
+  
+    <div class="content-box" *ngIf="activeTab === 'places'">
+      <div class="title">No places yet</div>
+      <div class="desc">You haven't added any places yet.</div>
+      <button class="cta">Add Your First Place</button>
+    </div>
+  </div>
+  
