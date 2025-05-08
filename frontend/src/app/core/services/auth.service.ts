@@ -45,7 +45,26 @@ export class AuthService {
 
   getCurrentUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/me`);
-  }  
+  }
+
+  handleAuthSuccess(token: string, refreshToken: string) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('refreshToken', refreshToken);
+  }
+  
+  
+  updateUser(user: User): Observable<any> {
+    return this.http.put<LoginResponse>(`${this.apiUrl}/update`, user).pipe(
+      tap((res) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('refreshToken', res.refreshToken);
+      })
+    );
+  }
+  
+  
+  
+  
     
   
 }

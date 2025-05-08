@@ -5,6 +5,6 @@ export interface User {
     ville: string;
     role: string;
     profilPhoto: string;
-    motDePasse: string;
+    motDePasse?: string;
 }
   

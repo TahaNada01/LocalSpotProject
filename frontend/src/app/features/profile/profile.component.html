@@ -13,8 +13,34 @@
       </div>
   
       <!-- Le bouton doit être ici -->
-      <button class="edit-btn">Edit Profile</button>
+      <button class="edit-btn" (click)="isEditing = !isEditing">
+        {{ isEditing ? 'Cancel' : 'Edit Profile' }}
+      </button>      
     </div>
+
+    <!-- MODAL -->
+    <div class="modal-backdrop" *ngIf="isEditing" (click)="isEditing = false"></div>
+
+    <div class="modal" *ngIf="isEditing">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h3>Edit Profil</h3>
+        <form (ngSubmit)="onSubmit()" #editForm="ngForm" class="edit-form">
+          <input type="text" name="nom" [(ngModel)]="user.nom" placeholder="Nom" required />
+          <input type="email" name="email" [(ngModel)]="user.email" placeholder="Email" required />
+          <input type="text" name="ville" [(ngModel)]="user.ville" placeholder="Ville" />
+          <input
+          type="password"
+          name="motDePasse"
+          [(ngModel)]="newPassword"
+          placeholder="••••••••" />
+          <div class="modal-actions">
+            <button type="submit" class="cta">Sauvegarder</button>
+            <button type="button" class="cancel" (click)="isEditing = false">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   
     <div class="tabs">
       <div class="tab" [class.active]="activeTab === 'places'" (click)="activeTab = 'places'">Places</div>
