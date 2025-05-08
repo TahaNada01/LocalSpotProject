@@ -42,8 +42,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User updateUserInfo(String email, UpdateUserRequest newData) {
-        User existingUser = userRepository.findByEmail(email)
+    public User updateUserInfo(Long id, UpdateUserRequest newData) {
+        User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
         if (newData.getNom() != null) existingUser.setNom(newData.getNom());
@@ -51,12 +51,21 @@ public class UserService {
         if (newData.getVille() != null) existingUser.setVille(newData.getVille());
         if (newData.getProfilPhoto() != null) existingUser.setProfilPhoto(newData.getProfilPhoto());
 
+        if (newData.getEmail() != null && !newData.getEmail().equals(existingUser.getEmail())) {
+            if (userRepository.existsByEmail(newData.getEmail())) {
+                throw new RuntimeException("Email déjà utilisé.");
+            }
+            existingUser.setEmail(newData.getEmail());
+        }
+
         if (newData.getMotDePasse() != null && !newData.getMotDePasse().isBlank()) {
             existingUser.setMotDePasse(passwordEncoder.encode(newData.getMotDePasse()));
+            System.out.println("MotDePasse : " + newData.getMotDePasse());
         }
 
         return userRepository.save(existingUser);
     }
+
 
 
 

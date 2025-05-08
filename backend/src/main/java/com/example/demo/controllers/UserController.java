@@ -111,7 +111,9 @@ public class UserController {
     public ResponseEntity<?> updateUser(@AuthenticationPrincipal User currentUser,
                                         @RequestBody UpdateUserRequest updateData) {
 
-        User updated = userService.updateUserInfo(currentUser.getEmail(), updateData);
+        User updated = userService.updateUserInfo(currentUser.getId(), updateData);
+
+
 
         // Re-génère un nouveau token après mise à jour
         String newToken = jwtUtil.generateToken(updated.getEmail(), updated.getRole());

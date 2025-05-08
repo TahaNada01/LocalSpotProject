@@ -9,4 +9,5 @@ public class UpdateUserRequest {
     private String ville;
     private String profilPhoto;
     private String motDePasse;
+    private String email;
 }
