@@ -10,8 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.example.demo.entities.User;
-import com.example.demo.services.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -34,6 +32,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        // 🔒 Ne pas filtrer les requêtes externes (ex: Google Places API)
+        String origin = request.getHeader("Origin");
+        String host = request.getHeader("Host");
+        if (origin != null && host != null && !origin.contains(host)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 🔒 Ne pas filtrer les routes non-API (comme fichiers statiques, etc.)
+        String requestURI = request.getRequestURI();
+        if (!requestURI.startsWith("/api/") && !requestURI.startsWith("/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String jwt;
         final String userEmail;
@@ -49,12 +62,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
-            // Comme isTokenValid prend seulement le token :
             if (jwtUtil.isTokenValid(jwt)) {
                 String role = jwtUtil.extractRole(jwt);
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, List.of(new SimpleGrantedAuthority(role)) // ← ici on injecte le rôle
+                        userDetails, null, List.of(new SimpleGrantedAuthority(role))
                 );
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
