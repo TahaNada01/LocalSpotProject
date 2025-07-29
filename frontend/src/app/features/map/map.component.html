@@ -1,0 +1,19 @@
+<div class="search-container">
+  <div class="input-wrapper">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Rechercher un lieu..."
+      (input)="onSearchChange()"
+      (keydown.enter)="onEnter($event)"
+    />
+    <button class="clear-btn" *ngIf="searchQuery" (click)="clearSearch()">×</button>
+  </div>
+
+  <ul class="suggestions" *ngIf="suggestions.length > 0">
+    <li *ngFor="let suggestion of suggestions" (click)="selectPlace(suggestion)">
+      {{ suggestion.displayName.text }}
+    </li>
+  </ul>
+</div>
+<div id="map"></div>
