@@ -21,7 +21,7 @@ export class MapComponent implements AfterViewInit {
   marker!: google.maps.Marker;
   searchQuery = '';
   suggestions: GooglePlace[] = [];
-  apiKey = 'AIzaSyDOZvFWgN8F0utDLHsLKOMDpN9yk4xoJLY'; 
+  apiKey = ''; 
 
   constructor(private http: HttpClient) {}
 
