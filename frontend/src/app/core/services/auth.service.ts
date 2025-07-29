@@ -44,13 +44,15 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/me`);
-  }
+  const token = localStorage.getItem('token');
 
-  handleAuthSuccess(token: string, refreshToken: string) {
-    localStorage.setItem('token', token);
-    localStorage.setItem('refreshToken', refreshToken);
-  }
+  const headers = {
+    Authorization: `Bearer ${token}`
+  };
+
+  return this.http.get<User>(`${this.apiUrl}/me`, { headers });
+}
+
   
   
   updateUser(user: User): Observable<any> {

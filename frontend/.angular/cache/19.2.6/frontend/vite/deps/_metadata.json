@@ -1,61 +1,67 @@
 {
-  "hash": "04f89d35",
-  "configHash": "d2919fcb",
-  "lockfileHash": "037d2666",
-  "browserHash": "a5707702",
+  "hash": "88906a40",
+  "configHash": "8c46bd31",
+  "lockfileHash": "d9c05bfd",
+  "browserHash": "bbd57a7f",
   "optimized": {
     "@angular/common": {
       "src": "../../../../../../node_modules/@angular/common/fesm2022/common.mjs",
       "file": "@angular_common.js",
-      "fileHash": "7ef310b2",
+      "fileHash": "692602e4",
       "needsInterop": false
     },
     "@angular/common/http": {
       "src": "../../../../../../node_modules/@angular/common/fesm2022/http.mjs",
       "file": "@angular_common_http.js",
-      "fileHash": "f93a3872",
+      "fileHash": "70988354",
       "needsInterop": false
     },
     "@angular/core": {
       "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
       "file": "@angular_core.js",
-      "fileHash": "4e52dc96",
+      "fileHash": "536658b8",
       "needsInterop": false
     },
     "@angular/forms": {
       "src": "../../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
       "file": "@angular_forms.js",
-      "fileHash": "230aa8aa",
+      "fileHash": "d041fc6d",
       "needsInterop": false
     },
     "@angular/platform-browser": {
       "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
       "file": "@angular_platform-browser.js",
-      "fileHash": "800c5705",
+      "fileHash": "2e57bf2b",
       "needsInterop": false
     },
     "@angular/router": {
       "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
       "file": "@angular_router.js",
-      "fileHash": "23186de3",
+      "fileHash": "62a3c0c0",
+      "needsInterop": false
+    },
+    "@googlemaps/js-api-loader": {
+      "src": "../../../../../../node_modules/@googlemaps/js-api-loader/dist/index.mjs",
+      "file": "@googlemaps_js-api-loader.js",
+      "fileHash": "3081c6bd",
       "needsInterop": false
     },
     "rxjs": {
       "src": "../../../../../../node_modules/rxjs/dist/esm5/index.js",
       "file": "rxjs.js",
-      "fileHash": "c8efa18d",
+      "fileHash": "0f720fee",
       "needsInterop": false
     },
     "rxjs/operators": {
       "src": "../../../../../../node_modules/rxjs/dist/esm5/operators/index.js",
       "file": "rxjs_operators.js",
-      "fileHash": "13c64758",
+      "fileHash": "c8d6a6a5",
       "needsInterop": false
     },
     "sweetalert2": {
       "src": "../../../../../../node_modules/sweetalert2/dist/sweetalert2.esm.all.js",
       "file": "sweetalert2.js",
-      "fileHash": "eba5bf03",
+      "fileHash": "7fd8bd00",
       "needsInterop": false
     }
   },
