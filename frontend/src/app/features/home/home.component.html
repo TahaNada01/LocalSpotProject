@@ -1,4 +1,52 @@
-<div class="home-content">
-  <h1>Welcome to LocalSpot 👋</h1>
-  <p>Discover and share your favorite places to work remotely!</p>
+<div class="container">
+  <div class="grid">
+    <div *ngFor="let place of places" class="card">
+      <div class="image-container">
+        <div class="place-img"
+            [ngStyle]="{
+              'background-image': place.photos?.length ? 'url(' + getPhotoUrl(place.photos[0].photo_reference) + ')' : 'none'
+            }">
+        </div>
+
+        <span *ngIf="place.opening_hours?.open_now" class="badge">
+          Available Today
+        </span>
+
+        <!-- Heart Icon -->
+        <button (click)="toggleFavorite(place)"
+                class="favorite-btn"
+                [attr.aria-label]="place.favorite ? 'Remove from favorites' : 'Add to favorites'">
+          <svg *ngIf="!place.favorite" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <svg *ngIf="place.favorite" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.343l-6.828-6.829a4 4 0 010-5.656z" />
+          </svg>
+        </button>
+      </div>
+
+
+      <div class="card-body">
+        <h3 class="place-title">{{ place.name }}</h3>
+        
+        <p class="place-address">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon-location" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 11c1.656 0 3-1.344 3-3s-1.344-3-3-3-3 1.344-3 3 1.344 3 3 3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 2C8.134 2 5 5.134 5 9c0 6 7 13 7 13s7-7 7-13c0-3.866-3.134-7-7-7z" />
+          </svg>
+          {{ place.formatted_address }}
+        </p>
+
+        <div class="meta">
+          <span class="rating">⭐ {{ place.rating }}/5</span>
+          <span [ngClass]="place.opening_hours?.open_now ? 'open' : 'closed'">
+            ● {{ place.opening_hours?.open_now ? 'Open now' : 'Closed' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

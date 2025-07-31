@@ -29,4 +29,9 @@ export class SidebarComponent {
       }
     });
   }
+
+  toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+}
+
 }

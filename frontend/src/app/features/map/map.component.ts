@@ -3,6 +3,8 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
+
 
 interface GooglePlace {
   displayName: { text: string };
@@ -21,13 +23,13 @@ export class MapComponent implements AfterViewInit {
   marker!: google.maps.Marker;
   searchQuery = '';
   suggestions: GooglePlace[] = [];
-  apiKey = ''; 
+  apiKey = environment.googleApiKey; 
 
   constructor(private http: HttpClient) {}
 
   ngAfterViewInit(): void {
     const loader = new Loader({
-      apiKey: this.apiKey,
+      apiKey: environment.googleApiKey,
       libraries: ['places']
     });
 
@@ -61,7 +63,7 @@ export class MapComponent implements AfterViewInit {
     const url = `https://places.googleapis.com/v1/places:searchText`;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': this.apiKey,
+      'X-Goog-Api-Key': environment.googleApiKey,
       'X-Goog-FieldMask': 'places.displayName,places.location'
     });
 
