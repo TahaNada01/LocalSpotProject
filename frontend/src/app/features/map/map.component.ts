@@ -3,6 +3,10 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
+import { ActivatedRoute } from '@angular/router';
+
+
 
 interface GooglePlace {
   displayName: { text: string };
@@ -21,20 +25,30 @@ export class MapComponent implements AfterViewInit {
   marker!: google.maps.Marker;
   searchQuery = '';
   suggestions: GooglePlace[] = [];
-  apiKey = ''; 
+  apiKey = environment.googleApiKey; 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
-    const loader = new Loader({
-      apiKey: this.apiKey,
-      libraries: ['places']
-    });
+  const loader = new Loader({
+    apiKey: environment.googleApiKey,
+    libraries: ['places']
+  });
 
-    loader.load().then(() => {
-      this.initMap({ lat: 44.8378, lng: -0.5792 }); // Bordeaux par défaut
+  loader.load().then(() => {
+    this.initMap({ lat: 44.8378, lng: -0.5792 }); // Bordeaux par défaut
+
+    // Vérifie si un paramètre ?query=... est présent
+    this.route.queryParams.subscribe(params => {
+      const query = params['query'];
+      if (query) {
+        this.searchQuery = query;
+        this.searchPlace();
+      }
     });
-  }
+  });
+}
+
 
   initMap(center: { lat: number; lng: number }) {
     const mapDiv = document.getElementById("map");
@@ -61,7 +75,7 @@ export class MapComponent implements AfterViewInit {
     const url = `https://places.googleapis.com/v1/places:searchText`;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': this.apiKey,
+      'X-Goog-Api-Key': environment.googleApiKey,
       'X-Goog-FieldMask': 'places.displayName,places.location'
     });
 

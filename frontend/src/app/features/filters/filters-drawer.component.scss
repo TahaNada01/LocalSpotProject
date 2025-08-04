@@ -1,0 +1,145 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 90;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100%;
+  background-color: #ffffff; 
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: slideIn 0.3s ease-out;
+  border-radius: 8px 0 0 8px;
+  color: #000000;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #000000;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #000000;
+
+    &:hover {
+      color: #7C3AED;
+    }
+  }
+}
+
+.drawer-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+
+    input {
+      margin-top: 0.3rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #CBD5E1; 
+      background-color: #f9f9f9;
+      color: #000000;
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+
+      button {
+        padding: 0.4rem 0.75rem;
+        border-radius: 20px;
+        border: 1px solid #CBD5E1;
+        background-color: #f3f4f6;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s ease-in-out;
+        color: #000000;
+
+        &.selected {
+          background-color: #7C3AED; 
+          color: white;
+          border-color: transparent;
+        }
+
+        &:hover:not(.selected) {
+          background-color: #CBD5E1;
+        }
+      }
+    }
+  }
+
+  .button-group {
+    display: flex;
+    gap: 0.5rem;
+
+    .reset-btn,
+    .apply-btn {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+
+    .reset-btn {
+      background-color: #6366F1; 
+
+      &:hover {
+        background-color: #7C3AED;
+      }
+    }
+
+    .apply-btn {
+      background-color: #7C3AED; 
+
+      &:hover {
+        background-color: #6366F1; 
+      }
+    }
+  }
+}

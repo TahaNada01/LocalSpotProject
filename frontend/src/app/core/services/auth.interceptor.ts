@@ -17,10 +17,11 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
 
   let authReq = req;
   if (token) {
-    authReq = req.clone({
-      setHeaders: { Authorization: `Bearer ${token}` },
-    });
-  }
+  console.log('interceptor activé - token présent');
+  authReq = req.clone({
+    setHeaders: { Authorization: `Bearer ${token}` },
+  });
+}
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {

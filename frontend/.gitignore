@@ -17,3 +17,10 @@ dist/
 *.idea/
 .vscode/
 .angular/cache
+
+# Ne pas versionner la clé API locale
+/src/environments/environment.ts
+
+# Ne pas versionner les fichiers de configuration sensibles (backend)
+backend/src/main/resources/application.properties
+

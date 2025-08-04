@@ -1,4 +1,99 @@
-<div class="home-content">
-  <h1>Welcome to LocalSpot 👋</h1>
-  <p>Discover and share your favorite places to work remotely!</p>
+<div class="container">
+  <!-- Barre de recherche + bouton Filtres -->
+  <div class="search-filter-bar">
+    <div class="search-group">
+      <input
+        type="text"
+        placeholder="Search for places, categories, or neighborhoods..."
+        class="search-input"
+        [(ngModel)]="searchTerm"
+        (keydown.enter)="onSearch()" />
+
+      <button (click)="onSearch()" class="icon-btn search-icon" aria-label="Search">
+        🔍
+      </button>
+
+      <button *ngIf="searchTerm" (click)="resetSearch()" class="icon-btn clear-icon" aria-label="Clear search">
+        ✕
+      </button>
+    </div>
+
+    <button class="filter-btn" (click)="drawerOpen = true">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 12.414V19a1 1 0 01-1.447.894l-4-2A1 1 0 019 17V12.414L3.293 6.707A1 1 0 013 6V4z" />
+      </svg>
+      Filters
+    </button>
+  </div>
+
+  <!-- Drawer (filtre latéral) -->
+  <app-filters-drawer
+    *ngIf="drawerOpen"
+    [currentCity]="ville"
+    [currentType]="type"
+    (closeDrawer)="drawerOpen = false"
+    (applyFilters)="onApplyFilters($event)">
+  </app-filters-drawer>
+
+  <!-- Grille des lieux -->
+  <div *ngIf="!isLoading; else loadingTemplate">
+    <div class="grid" *ngIf="places.length; else noResults">
+      <div *ngFor="let place of places" class="card">
+        <div class="image-container">
+          <div class="place-img"
+              [ngStyle]="{
+                'background-image': place.photos?.length ? 'url(' + getPhotoUrl(place.photos[0].photo_reference) + ')' : 'none'
+              }">
+          </div>
+
+          <span *ngIf="place.opening_hours?.open_now" class="badge">Available Today</span>
+
+          <button (click)="toggleFavorite(place)"
+                  class="favorite-btn"
+                  [attr.aria-label]="place.favorite ? 'Remove from favorites' : 'Add to favorites'">
+            <svg *ngIf="!place.favorite" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <svg *ngIf="place.favorite" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.343l-6.828-6.829a4 4 0 010-5.656z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="card-body">
+          <h3 class="place-title">{{ place.name }}</h3>
+          <a class="place-address" [routerLink]="['/map']" [queryParams]="{ query: place.formatted_address }" title="Voir sur la carte">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon-location" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 11c1.656 0 3-1.344 3-3s-1.344-3-3-3-3 1.344-3 3 1.344 3 3 3z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 2C8.134 2 5 5.134 5 9c0 6 7 13 7 13s7-7 7-13c0-3.866-3.134-7-7-7z" />
+            </svg>
+            {{ place.formatted_address }}
+          </a>
+          <div class="meta">
+            <span class="rating">⭐ {{ place.rating }}/5</span>
+            <span [ngClass]="place.opening_hours?.open_now ? 'open' : 'closed'">
+              ● {{ place.opening_hours?.open_now ? 'Open now' : 'Closed' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template si aucun résultat -->
+  <ng-template #noResults>
+    <p style="text-align:center; font-weight:bold; color:#666; margin-top: 2rem;">
+      No results found for "<strong>{{ searchTerm }}</strong>" in <strong>{{ ville }}</strong>
+    </p>
+  </ng-template>
+
+  <ng-template #loadingTemplate>
+    <p style="text-align:center; font-weight:bold; margin-top: 2rem;">
+      ⏳ Loading results in <strong>{{ ville }}</strong>...
+    </p>
+  </ng-template>
 </div>

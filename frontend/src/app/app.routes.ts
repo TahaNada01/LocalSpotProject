@@ -15,11 +15,14 @@ export const appRoutes: Routes = [
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: 'home', component: HomeComponent },
       { path: 'profile', component: ProfileComponent },
       {
         path: 'map',
         loadComponent: () => import('./features/map/map.component').then(m => m.MapComponent) 
+      },
+      {
+        path: 'home',
+        loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
       }
     ]
   }
