@@ -1,0 +1,39 @@
+<!-- Overlay -->
+<div class="overlay" (click)="close()"></div>
+
+<!-- Drawer -->
+<div class="drawer">
+  <div class="drawer-header">
+    <h3>Filter Places</h3>
+    <button class="close-btn" (click)="close()">×</button>
+  </div>
+
+  <div class="drawer-body">
+    <label class="field">
+      Ville:
+      <input type="text" [(ngModel)]="ville" placeholder="Entrez une ville..." />
+    </label>
+
+    <div class="field">
+      <span>Catégorie:</span>
+      <div class="categories">
+        <button
+          *ngFor="let cat of categories"
+          [class.selected]="cat.type === type"
+          (click)="type = cat.type">
+          {{ cat.label }}
+        </button>
+      </div>
+    </div>
+
+    
+    <div class="button-group">
+      <button class="reset-btn" (click)="resetFilters()">Reset Filters</button>
+      <button class="apply-btn"
+                [disabled]="!ville.trim() && !selectedCategory"
+                (click)="apply()">
+                Apply Filters
+      </button>
+    </div>
+  </div>
+</div>

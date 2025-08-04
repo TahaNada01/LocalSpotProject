@@ -2,6 +2,86 @@
   padding: 2rem;
 }
 
+.filters {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+  }
+
+  .reset-btn {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #dc2626;
+    }
+  }
+}
+
+.search-filter-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+
+  .search-input {
+    flex: 1;
+    min-width: 250px;
+    max-width: 500px;
+    padding: 0.75rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid #CBD5E1;
+    font-size: 1rem;
+    background-color: #f9fafb;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #7C3AED;
+    }
+  }
+
+  .filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #7C3AED;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      stroke: white;
+    }
+
+    &:hover {
+      background-color: #6a27d9;
+    }
+  }
+}
+
+
+
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); // 3 cards par ligne par défaut
@@ -117,3 +197,63 @@
     }
   }
 }
+
+.search-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+
+  .search-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid #CBD5E1;
+    font-size: 1rem;
+    background-color: #f9fafb;
+
+    &:focus {
+      outline: none;
+      border-color: #7C3AED;
+    }
+  }
+
+  .icon-btn {
+    position: absolute;
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  .search-icon {
+    right: 2.5rem;
+    color: #7C3AED;
+  }
+
+  .clear-icon {
+    right: 0.75rem;
+    color: #6B7280;
+  }
+}
+
+.loading-message,
+.no-result-message {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #6B7280;
+  margin-top: 2rem;
+
+  strong {
+    color: #7C3AED;
+  }
+}
+

@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class CategoriesService {
   private categories = [
-    { label: 'All', type: '' },
-    { label: 'Cafés', type: 'cafe' },
+    { label: 'Bars', type: 'bar' }, 
+    { label: 'Cafe', type: 'cafe' },
     { label: 'Libraries', type: 'library' },
     { label: 'Parks', type: 'park' },
     { label: 'Restaurants', type: 'restaurant' },
