@@ -53,5 +53,22 @@
       <div class="desc">You haven't added any places yet.</div>
       <button class="cta">Add Your First Place</button>
     </div>
+
+    <div class="content-box" *ngIf="activeTab === 'favorites'">
+      <div *ngIf="favorites.length > 0; else noFavorites">
+        <div class="favorite-card" *ngFor="let fav of favorites">
+          <h4>{{ fav.name }}</h4>
+          <p>{{ fav.address }}</p>
+          <button class="delete-btn" (click)="deleteFavorite(fav.placeId)">✕</button>
+        </div>
+      </div>
+      <ng-template #noFavorites>
+        <div class="title">No favorites yet</div>
+        <div class="desc">You haven't added any favorites yet.</div>
+      </ng-template>
+    </div>
+
+
+
   </div>
   
