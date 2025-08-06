@@ -139,6 +139,7 @@ export class HomeComponent implements OnInit {
       this.favoritesService.deleteFavorite(place.place_id).subscribe({
         next: () => {
           place.favorite = false;
+          this.loadFavorites(); //recharge la liste des favoris
         },
         error: (err) => {
           console.error('Erreur suppression favori :', err);
@@ -148,11 +149,17 @@ export class HomeComponent implements OnInit {
       const newFavorite = {
         placeId: place.place_id,
         name: place.name,
-        address: place.formatted_address
+        address: place.formatted_address,
+        photoReference: place.photos?.[0]?.photo_reference || '',
+        rating: place.rating || null,
+        openNow: place.opening_hours?.open_now ?? null
       };
+
+      console.log('➡️ Envoi du favori :', newFavorite);
       this.favoritesService.addFavorite(newFavorite).subscribe({
         next: () => {
           place.favorite = true;
+          this.loadFavorites(); //recharge après ajout
         },
         error: (err) => {
           console.error('Erreur ajout favori :', err);
@@ -160,6 +167,7 @@ export class HomeComponent implements OnInit {
       });
     }
   }
+
 
   onCategoryChange(newType: string): void {
     this.type = newType;
@@ -194,4 +202,6 @@ export class HomeComponent implements OnInit {
     this.searchTerm = '';
     this.places = [...this.allPlaces];
   }
+
+
 }

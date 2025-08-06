@@ -5,6 +5,7 @@ import { User } from '../../core/models/user.model';
 import { Favorite } from '../../core/models/favorite.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -30,6 +31,7 @@ export class ProfileComponent implements OnInit {
   activeTab: string = 'places';
   isEditing: boolean = false;
   favorites: Favorite[] = [];
+  isLoadingFavorites = false;
 
   constructor(
     private authService: AuthService,
@@ -49,27 +51,37 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  
+
   loadFavorites(): void {
+    this.isLoadingFavorites = true;
     this.favoritesService.getFavorites().subscribe({
       next: (data: Favorite[]) => {
         this.favorites = data;
+        this.isLoadingFavorites = false;
       },
       error: (err: any) => {
         console.error('Erreur lors du chargement des favoris:', err);
+        this.isLoadingFavorites = false;
       }
     });
   }
 
+
+  getPhotoUrl(photoReference: string): string {
+    return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoReference}&key=${environment.googleApiKey}`;
+  }
+
   deleteFavorite(placeId: string): void {
-  this.favoritesService.deleteFavorite(placeId).subscribe({
-    next: () => {
-      this.favorites = this.favorites.filter(f => f.placeId !== placeId);
-    },
-    error: (err) => {
-      console.error('Erreur lors de la suppression:', err);
-    }
-  });
-}
+    this.favoritesService.deleteFavorite(placeId).subscribe({
+      next: () => {
+        this.favorites = this.favorites.filter(f => f.placeId !== placeId);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression:', err);
+      }
+    });
+  }
 
 
 
