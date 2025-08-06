@@ -17,7 +17,13 @@ public class Favorite {
     private String address;
     private String placeId;
 
+    @Column(length = 1024)
+    private String photoReference;
+    private Double rating;
+    private Boolean openNow;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }
+

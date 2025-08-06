@@ -11,4 +11,7 @@ public class FavoriteDto {
     private String name;
     private String address;
     private String placeId;
+    private String photoReference;
+    private Double rating;
+    private Boolean openNow;
 }

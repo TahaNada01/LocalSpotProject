@@ -9,10 +9,12 @@ import com.example.demo.entities.User;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FavoriteService {
@@ -24,16 +26,21 @@ public class FavoriteService {
     private UserRepository userRepository;
 
     public List<FavoriteResponseDto> getFavoritesByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable"));
 
-        return favoriteRepository.findByUser(user).stream()
-                .map(fav -> new FavoriteResponseDto(
-                        fav.getName(),
-                        fav.getAddress(),
-                        fav.getPlaceId()
-                ))
-                .toList();
+        List<Favorite> favorites = favoriteRepository.findByUser(user);
+
+        return favorites.stream().map(fav -> new FavoriteResponseDto(
+                fav.getName(),
+                fav.getAddress(),
+                fav.getPlaceId(),
+                fav.getPhotoReference(),
+                fav.getRating(),
+                fav.getOpenNow()
+        )).collect(Collectors.toList());
     }
+
 
     public void addFavorite(String email, FavoriteDto favoriteDto) {
         User user = userRepository.findByEmail(email)
@@ -44,6 +51,9 @@ public class FavoriteService {
                     .name(favoriteDto.getName())
                     .address(favoriteDto.getAddress())
                     .placeId(favoriteDto.getPlaceId())
+                    .photoReference(favoriteDto.getPhotoReference())
+                    .rating(favoriteDto.getRating())
+                    .openNow(favoriteDto.getOpenNow())
                     .user(user)
                     .build();
 
