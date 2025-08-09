@@ -155,7 +155,7 @@ export class HomeComponent implements OnInit {
         openNow: place.opening_hours?.open_now ?? null
       };
 
-      console.log('➡️ Envoi du favori :', newFavorite);
+      console.log(' Envoi du favori :', newFavorite);
       this.favoritesService.addFavorite(newFavorite).subscribe({
         next: () => {
           place.favorite = true;

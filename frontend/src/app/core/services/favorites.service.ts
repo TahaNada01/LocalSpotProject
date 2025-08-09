@@ -15,12 +15,13 @@ export class FavoritesService {
     return this.http.get<Favorite[]>(this.baseUrl);
   }
 
-  deleteFavorite(placeId: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${placeId}`);
+  deleteFavorite(placeId: string): Observable<string> {
+    return this.http.delete(`${this.baseUrl}/${placeId}`, {
+      responseType: 'text' as 'text' 
+    });
   }
 
   addFavorite(favorite: Favorite): Observable<Favorite> {
     return this.http.post<Favorite>(this.baseUrl, favorite);
-    }
-
+  }
 }

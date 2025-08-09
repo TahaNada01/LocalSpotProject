@@ -169,40 +169,22 @@
     cursor: pointer;
   }
 
-  .favorite-card {
-    position: relative;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    background-color: #fafafa;
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1rem;
 
-    h4 {
-      margin: 0;
-      font-weight: bold;
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
     }
 
-    p {
-      margin: 0.25rem 0;
-      color: #555;
-    }
-
-    .delete-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      color: #999;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: color 0.2s ease-in-out;
-
-      &:hover {
-        color: #e74c3c;
-      }
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
     }
   }
+
 
   
   

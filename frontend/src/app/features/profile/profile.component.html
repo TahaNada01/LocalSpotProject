@@ -55,47 +55,24 @@
     </div>
 
     <div class="content-box" *ngIf="activeTab === 'favorites'">
-      <div *ngIf="favorites.length > 0; else noFavorites">
+      <div *ngIf="transformedFavorites.length > 0; else noFavorites">
         <div class="grid">
-          <div *ngFor="let fav of favorites" class="card">
-            <div class="image-container">
-              <div
-                class="place-img"
-                [ngStyle]="{
-                  'background-image': fav.photoReference
-                    ? 'url(' + getPhotoUrl(fav.photoReference) + ')'
-                    : 'none'
-                }">
-              </div>
-
-              <span *ngIf="fav.openNow" class="badge">Available Today</span>
-
-              <button (click)="deleteFavorite(fav.placeId)"
-                      class="favorite-btn"
-                      aria-label="Remove from favorites">
-                ✕
-              </button>
-            </div>
-
-            <div class="card-body">
-              <h3 class="place-title">{{ fav.name }}</h3>
-              <p class="place-address">{{ fav.address }}</p>
-              <div class="meta">
-                <span class="rating">⭐ {{ fav.rating || 'N/A' }}/5</span>
-                <span [ngClass]="fav.openNow ? 'open' : 'closed'">
-                  ● {{ fav.openNow ? 'Open now' : 'Closed' }}
-                </span>
-              </div>
-            </div>
-          </div>
+          <app-place-card
+            *ngFor="let fav of transformedFavorites"
+            [place]="fav"
+            [isFavorite]="true"
+            [showRemoveButton]="true"
+            (remove)="deleteFavorite(fav.placeId)">
+          </app-place-card>
         </div>
-
       </div>
+
       <ng-template #noFavorites>
         <div class="title">No favorites yet</div>
         <div class="desc">You haven't added any favorites yet.</div>
       </ng-template>
     </div>
+
 
 
 

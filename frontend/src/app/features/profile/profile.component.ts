@@ -6,11 +6,12 @@ import { Favorite } from '../../core/models/favorite.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
+import { PlaceCardComponent } from '../place-card/place-card.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PlaceCardComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
   standalone: true,
@@ -31,6 +32,7 @@ export class ProfileComponent implements OnInit {
   activeTab: string = 'places';
   isEditing: boolean = false;
   favorites: Favorite[] = [];
+  transformedFavorites: any[] = [];
   isLoadingFavorites = false;
 
   constructor(
@@ -45,19 +47,25 @@ export class ProfileComponent implements OnInit {
       if (!this.user.ville) {
         this.user.ville = 'Unknown';
       }
-
-      // Charger les favoris après avoir récupéré l'utilisateur
       this.loadFavorites();
     });
   }
-
-  
 
   loadFavorites(): void {
     this.isLoadingFavorites = true;
     this.favoritesService.getFavorites().subscribe({
       next: (data: Favorite[]) => {
         this.favorites = data;
+        this.transformedFavorites = this.favorites.map(fav => ({
+          name: fav.name,
+          address: fav.address,
+          photoReference: fav.photoReference,
+          rating: fav.rating,
+          opening_hours: {
+            open_now: fav.openNow
+          },
+          placeId: fav.placeId
+        }));
         this.isLoadingFavorites = false;
       },
       error: (err: any) => {
@@ -67,7 +75,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-
   getPhotoUrl(photoReference: string): string {
     return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoReference}&key=${environment.googleApiKey}`;
   }
@@ -75,10 +82,27 @@ export class ProfileComponent implements OnInit {
   deleteFavorite(placeId: string): void {
     this.favoritesService.deleteFavorite(placeId).subscribe({
       next: () => {
-        this.favorites = this.favorites.filter(f => f.placeId !== placeId);
+        // Recharge proprement toute la liste depuis la base
+        this.loadFavorites();
+
+        // Optionnel : feedback utilisateur
+        Swal.fire({
+          icon: 'success',
+          title: 'Favori supprimé',
+          text: 'Le lieu a été supprimé de vos favoris.',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#7c3aed'
+        });
       },
       error: (err) => {
         console.error('Erreur lors de la suppression:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: 'Impossible de supprimer ce lieu.',
+          confirmButtonText: 'Fermer',
+          confirmButtonColor: '#7c3aed'
+        });
       }
     });
   }
