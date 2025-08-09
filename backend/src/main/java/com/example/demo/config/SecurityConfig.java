@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/register", "/auth/login").permitAll()
                         .requestMatchers("/api/places/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/auth/me", "/favorites", "/favorites/**").authenticated()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()

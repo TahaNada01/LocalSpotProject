@@ -39,7 +39,8 @@ public class FavoriteController {
         System.out.println("Utilisateur connecté : " + user.getEmail());
 
         favoriteService.deleteFavoriteByPlaceId(user.getEmail(), placeId);
-        return ResponseEntity.ok("Favori supprimé.");
+        return ResponseEntity.noContent().build();
+
     }
 
 }
