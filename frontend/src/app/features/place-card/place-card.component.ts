@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -11,18 +11,31 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./place-card.component.scss'],
 })
 export class PlaceCardComponent {
+  constructor(private router: Router) {}
+
   @Input() place!: {
     name: string;
     address: string;
     photoReference?: string;
     opening_hours?: { open_now?: boolean };
     rating?: number;
+    place_id?: string;
+    placeId?: string;
   };
 
-  @Input() isFavorite: boolean = false;
-  @Input() showRemoveButton: boolean = false;
+  @Input() isFavorite = false;
+  @Input() showRemoveButton = false;
 
   @Output() remove = new EventEmitter<void>();
+
+ 
+  get id(): string | null {
+    return (this.place as any)?.place_id ?? (this.place as any)?.placeId ?? null;
+  }
+
+  get link(): any[] | null {
+    return this.id ? ['/places', this.id] : null; 
+  }
 
   getPhotoUrl(): string {
     return this.place.photoReference
@@ -30,11 +43,19 @@ export class PlaceCardComponent {
       : '';
   }
 
-  onToggleFavorite(): void {
+  goToDetails(evt?: Event) {
+    if (evt) evt.preventDefault();
+    if (this.link) this.router.navigate(this.link);
+  }
+
+ 
+  onToggleFavorite(evt?: Event): void {
+    if (evt) evt.stopPropagation();
     this.remove.emit();
   }
 
-  onRemove(): void {
+  onRemove(evt?: Event): void {
+    if (evt) evt.stopPropagation(); 
     this.remove.emit();
   }
 }

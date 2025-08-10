@@ -1,0 +1,129 @@
+<ng-container *ngIf="place$ | async as place; else loading">
+  <!-- HERO -->
+  <section class="hero" [style.--hero-url]="getHeroUrl(place)">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-bar">
+      <button class="btn back" (click)="goBack()" aria-label="Go back">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path d="M10 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path d="M4 12h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span>Back</span>
+      </button>
+
+      <!-- Status (aligné à droite) -->
+      <span class="status" [class.open]="place.opening_hours?.open_now === true">
+        {{
+          place.opening_hours?.open_now === true
+            ? 'Open'
+            : place.opening_hours?.open_now === false
+              ? 'Closed'
+              : 'Unknown'
+        }}
+      </span>
+    </div>
+
+    <div class="hero-bottom">
+      <h1 class="title">{{ place.name || '—' }}</h1>
+
+      <div class="chips">
+        <span class="chip" *ngIf="place.price_level !== undefined">{{ euros(place.price_level) }}</span>
+
+        <span class="chip rating" *ngIf="place.rating !== undefined">
+          ★ {{ place.rating }}
+          <span class="muted" *ngIf="place.user_ratings_total !== undefined">
+            ({{ place.user_ratings_total }})
+          </span>
+        </span>
+
+        <span class="chip" *ngFor="let t of filteredTypes(place.types)">{{ t }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <section class="content">
+    <div class="main">
+      <!-- Hours -->
+      <div class="card" *ngIf="place.opening_hours?.weekday_text as hours">
+        <h2 class="card-title">Hours</h2>
+        <ul class="hours-list">
+          <li *ngFor="let line of (hours || [])">{{ line }}</li>
+        </ul>
+      </div>
+
+      <!-- Photos -->
+      <div class="card" *ngIf="place.photos?.length">
+        <h2 class="card-title">Photos</h2>
+        <div class="gallery">
+          <img *ngFor="let ph of (place.photos || [])"
+            [src]="ph?.photo_reference ? places.getPhotoUrl(ph.photo_reference, 1000) : ''"
+            [alt]="place.name || ''" loading="lazy" />
+        </div>
+      </div>
+
+      <!-- Reviews -->
+      <div class="card" *ngIf="place.reviews?.length">
+        <h2 class="card-title">Reviews</h2>
+
+        <article *ngFor="let r of (place.reviews || []) | slice:0:6" class="review">
+          <div class="rev-head">
+            <div class="avatar" *ngIf="r?.profile_photo_url"
+              [style.backgroundImage]="'url(' + r.profile_photo_url + ')'"></div>
+
+            <div class="who">
+              <strong>{{ r?.author_name || 'User' }}</strong>
+              <div class="muted" *ngIf="r?.relative_time_description">{{ r.relative_time_description }}</div>
+            </div>
+
+            <span class="badge purple" *ngIf="r?.rating !== undefined">★ {{ r.rating }}</span>
+          </div>
+
+          <p class="rev-text" *ngIf="r?.text">{{ r.text }}</p>
+        </article>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="side">
+      <div class="card info">
+        <h3 class="card-title">Info</h3>
+
+        <div class="info-row" *ngIf="place.international_phone_number">
+          <span class="label">Phone</span>
+          <a [href]="'tel:' + place.international_phone_number">{{ place.international_phone_number }}</a>
+        </div>
+
+        <div class="info-row" *ngIf="place.website">
+          <span class="label">Website</span>
+          <a [href]="place.website" target="_blank" rel="noopener">Open</a>
+        </div>
+
+        <div class="info-row" *ngIf="place.formatted_address">
+          <span class="label">Address</span>
+          <span>{{ place.formatted_address }}</span>
+        </div>
+
+        <a class="btn primary w-full" *ngIf="place.geometry?.location" [href]="dirLink(place)" target="_blank"
+          rel="noopener">
+          Open directions
+        </a>
+      </div>
+
+      <div class="card tips">
+        <h3 class="card-title">Good to know</h3>
+        <ul class="bullets">
+          <li *ngIf="place.price_level !== undefined">Price range: {{ euros(place.price_level) }}</li>
+          <li *ngIf="place.opening_hours?.open_now">Currently open</li>
+          <li *ngIf="place.types?.length">Categories: {{ filteredTypes(place.types).join(', ') }}</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+</ng-container>
+
+<ng-template #loading>
+  <div class="loading">Loading…</div>
+</ng-template>

@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" (click)="goToDetails($event)">
   <div class="image-container">
     <div
       class="place-img"
@@ -9,81 +9,69 @@
 
     <span *ngIf="place.opening_hours?.open_now" class="badge">Available Today</span>
 
-    <!-- Icône coeur -->
+    <!-- Heart (list mode) -->
     <button
       *ngIf="!showRemoveButton"
-      (click)="onToggleFavorite()"
+      type="button"
+      (click)="onToggleFavorite($event)"
       class="favorite-btn"
       aria-label="Toggle favorite"
     >
-      <svg
-        *ngIf="!isFavorite"
-        xmlns="http://www.w3.org/2000/svg"
-        class="icon"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-        />
+      <!-- empty heart = gray -->
+      <svg *ngIf="!isFavorite" xmlns="http://www.w3.org/2000/svg" class="icon" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
       </svg>
-      <svg
-        *ngIf="isFavorite"
-        xmlns="http://www.w3.org/2000/svg"
-        class="icon filled"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.343l-6.828-6.829a4 4 0 010-5.656z"
-        />
+      <!-- filled heart = red -->
+      <svg *ngIf="isFavorite" xmlns="http://www.w3.org/2000/svg" class="icon filled"
+           viewBox="0 0 20 20" fill="currentColor">
+        <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.343l-6.828-6.829a4 4 0 010-5.656z"/>
       </svg>
     </button>
 
-    <!-- Poubelle -->
+    <!-- Trash (favorites page) -->
     <button
       *ngIf="showRemoveButton"
-      (click)="onRemove()"
+      type="button"
+      (click)="onRemove($event)"
       class="delete-btn"
-      aria-label="Supprimer le favori"
+      aria-label="Remove favorite"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="icon trash"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon trash" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"/>
       </svg>
     </button>
   </div>
 
   <div class="card-body">
-    <h3 class="place-title">{{ place.name }}</h3>
+    <!-- Title links to details when id is available -->
+    <ng-container *ngIf="link; else plainTitle">
+      <a [routerLink]="link" (click)="$event.stopPropagation()" class="place-title link">
+        {{ place.name }}
+      </a>
+    </ng-container>
+    <ng-template #plainTitle>
+      <h3 class="place-title">{{ place.name }}</h3>
+    </ng-template>
+
+    <!-- Address -> map page as before -->
     <a
       class="place-address"
       [routerLink]="['/map']"
       [queryParams]="{ query: place.address }"
-      title="Voir sur la carte">
+      title="View on map"
+      (click)="$event.stopPropagation()">
       <svg xmlns="http://www.w3.org/2000/svg" class="icon-location" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 11c1.656 0 3-1.344 3-3s-1.344-3-3-3-3 1.344-3 3 1.344 3 3 3z" />
+              d="M12 11c1.656 0 3-1.344 3-3s-1.344-3-3-3-3 1.344-3 3 1.344 3 3 3z"/>
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 2C8.134 2 5 5.134 5 9c0 6 7 13 7 13s7-7 7-13c0-3.866-3.134-7-7-7z" />
+              d="M12 2C8.134 2 5 5.134 5 9c0 6 7 13 7 13s7-7 7-13c0-3.866-3.134-7-7-7z"/>
       </svg>
       {{ place.address }}
     </a>
-
 
     <div class="meta">
       <span class="rating">★ {{ place.rating || 'N/A' }}/5</span>

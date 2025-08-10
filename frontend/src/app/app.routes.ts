@@ -25,7 +25,14 @@ export const appRoutes: Routes = [
         path: 'home',
         loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
       },
-      { path: 'favorites', component: FavoritesComponent }
+      { path: 'favorites', component: FavoritesComponent },
+      {
+        path: 'places/:placeId',
+        loadComponent: () =>
+          import('./features/place-details/place-details.component')
+            .then(m => m.PlaceDetailsComponent)
+      }
+
     ]
   }
 ];

@@ -160,6 +160,12 @@
       font-size: 1rem;
       font-weight: 600;
       margin-bottom: 0.25rem;
+      cursor: pointer;
+      color: #7C3AED;
+    }
+
+    .place-title:hover { 
+      text-decoration: underline; 
     }
 
     .place-address {

@@ -9,6 +9,7 @@ import { FiltersDrawerComponent } from '../filters/filters-drawer.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Favorite } from '../../core/models/favorite.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -37,7 +38,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private placeService: PlaceService,
     private categoriesService: CategoriesService,
-    private favoritesService: FavoritesService
+    private favoritesService: FavoritesService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -180,8 +182,9 @@ export class HomeComponent implements OnInit {
   }
 
   getPhotoUrl(photoReference: string): string {
-    return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoReference}&key=${environment.googleApiKey}`;
+  return this.placeService.getPhotoUrl(photoReference, 400);
   }
+
 
   resetFilters(): void {
     this.ville = 'Paris';
@@ -202,6 +205,11 @@ export class HomeComponent implements OnInit {
     this.searchTerm = '';
     this.places = [...this.allPlaces];
   }
+
+  openDetails(placeId: string): void {
+  this.router.navigate(['/places', placeId]);
+  }
+
 
 
 }

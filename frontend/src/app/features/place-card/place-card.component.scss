@@ -4,16 +4,17 @@
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   width: 100%;
   max-width: 360px;
-  height: 350px; 
-
+  height: 350px;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
   }
 
   .image-container {
@@ -55,15 +56,21 @@
       cursor: pointer;
 
       &:hover {
-        background-color: #fee2e2;
-        border-color: #fca5a5;
+        background-color: #f3f4f6;
         transform: scale(1.1);
       }
 
       .icon {
         width: 22px;
         height: 22px;
+      }
+
+      .icon.filled {
         color: #ef4444;
+      }
+
+      .icon:not(.filled) {
+        color: #9ca3af; // Gris quand pas favori
       }
     }
   }
@@ -80,8 +87,6 @@
       font-weight: 700;
       color: #1f2937;
       margin-bottom: 0.2rem;
-
-      
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 2;
