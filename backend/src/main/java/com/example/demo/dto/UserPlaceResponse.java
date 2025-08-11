@@ -1,4 +1,5 @@
 package com.example.demo.dto;
 
-public class UserPlaceResponse {
-}
+public record UserPlaceResponse(
+        Long id, String name, String imageUrl, Long createdById, String openingHoursJson
+) {}
