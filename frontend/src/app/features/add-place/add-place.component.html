@@ -1,0 +1,190 @@
+<div class="page">
+  <h1>Add a New Place</h1>
+  <p class="subtitle">Share your favorite local spot with the community.</p>
+
+  <form class="card" [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Row 1 -->
+    <div class="row">
+      <div class="field">
+        <label class="label-strong">Name *</label>
+        <input
+          formControlName="name"
+          [class.invalid]="form.get('name')?.invalid && form.get('name')?.touched" />
+      </div>
+
+      <div class="field">
+        <label class="label-strong">Category *</label>
+        <select
+          formControlName="category"
+          [class.invalid]="form.get('category')?.invalid && form.get('category')?.touched">
+          <option [ngValue]="null" disabled>Select…</option>
+          <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="row">
+      <div class="field col-2">
+        <label class="label-strong">Address *</label>
+        <input
+          formControlName="addressLine"
+          [class.invalid]="form.get('addressLine')?.invalid && form.get('addressLine')?.touched" />
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="row">
+      <div class="field">
+        <label class="label-strong">City *</label>
+        <input
+          formControlName="city"
+          inputmode="text"
+          autocomplete="address-level2"
+          pattern="^[A-Za-zÀ-ÿ' -]+$"
+          maxlength="80"
+          (keydown)="lettersOnly($event)"
+          [class.invalid]="form.get('city')?.invalid && form.get('city')?.touched" />
+      </div>
+
+      <div class="field">
+        <label class="label-strong">ZIP *</label>
+        <input
+          formControlName="postalCode"
+          type="text"
+          inputmode="numeric"
+          pattern="^[0-9]{3,10}$"
+          maxlength="10"
+          (keydown)="numbersOnly($event)"
+          [class.invalid]="form.get('postalCode')?.invalid && form.get('postalCode')?.touched" />
+      </div>
+
+      <div class="field">
+        <label class="label-strong">Country *</label>
+        <input
+          formControlName="country"
+          [class.invalid]="form.get('country')?.invalid && form.get('country')?.touched" />
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="row">
+      <div class="field col-2">
+        <label class="label-strong">Short description (max 200)</label>
+        <textarea
+          formControlName="shortDescription"
+          rows="3"
+          [class.invalid]="form.get('shortDescription')?.invalid && form.get('shortDescription')?.touched"></textarea>
+      </div>
+    </div>
+
+    <!-- Row 5 -->
+    <div class="row">
+      <div class="field">
+        <label class="label-strong">Price range</label>
+        <select formControlName="priceRange">
+          <option value="">—</option>
+          <option value="€">€</option>
+          <option value="€€">€€</option>
+          <option value="€€€">€€€</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="label-strong">Average price (€)</label>
+        <input type="number" min="1" formControlName="avgPrice" />
+      </div>
+    </div>
+
+    <!-- Opening hours -->
+    <div class="row">
+      <div class="field col-2">
+        <label class="label-strong">Opening hours</label>
+
+        <!-- quick actions -->
+        <div class="hours-toolbar">
+          <button type="button" class="link" (click)="preset247()">24/7</button>
+          <span class="sep">·</span>
+          <button type="button" class="link" (click)="presetWeek('09:00','18:00')">Mon–Fri 09:00–18:00</button>
+          <span class="sep">·</span>
+          <button type="button" class="link danger" (click)="clearHours()">Clear all</button>
+        </div>
+
+        <div class="hours" formArrayName="openingHours">
+          <table class="hours-table">
+            <thead>
+            <tr>
+              <th>Day</th>
+              <th>Closed</th>
+              <th>24h</th>
+              <th>Open</th>
+              <th>Close</th>
+              <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let d of days; let i = index" [formGroupName]="i">
+              <td class="day-cell">{{ d.label }}</td>
+
+              <td class="check-cell">
+                <input type="checkbox" formControlName="closed" (change)="onClosedChanged(i)" />
+              </td>
+
+              <td class="check-cell">
+                <input type="checkbox" formControlName="allDay" (change)="onAllDayChanged(i)" />
+              </td>
+
+              <td><input type="time" formControlName="open"  [disabled]="isDisabled(i)" /></td>
+              <td><input type="time" formControlName="close" [disabled]="isDisabled(i)" /></td>
+
+              <td class="row-actions">
+                <button type="button" class="link" (click)="copyToAll(i)">Copy all</button>
+                <span class="sep">·</span>
+                <button type="button" class="link" (click)="copyToNext(i)">Next</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <small class="hint">Tip: use quick actions to fill common schedules, then adjust specific days.</small>
+      </div>
+    </div>
+
+    <!-- Photo -->
+    <div class="row file-row">
+      <div class="field">
+        <label class="label-strong">Photo (jpg/png/webp)</label>
+        <input type="file" accept="image/png,image/jpeg,image/webp" (change)="onFileChange($event)" />
+        <small class="hint">Max 5 MB</small>
+      </div>
+
+      <div class="preview" *ngIf="previewUrl">
+        <img [src]="previewUrl" alt="Preview" />
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" type="submit" [disabled]="form.invalid || saving">
+        <ng-container *ngIf="!saving">Save</ng-container>
+        <ng-container *ngIf="saving">Saving…</ng-container>
+      </button>
+      <button class="btn" type="button"
+              (click)="form.reset({ country: 'France', priceRange: '' }); previewUrl = undefined; file = undefined;">
+        Reset
+      </button>
+    </div>
+
+    <!-- Success banner -->
+    <div class="notice success" role="status" aria-live="polite" *ngIf="success">
+      <div class="icon">✓</div>
+      <div class="msg">
+        <strong>{{ success.name }}</strong> has been saved.
+        You can find it in <button type="button" class="link" (click)="goToCommunity()">Community</button>.
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="success = undefined">×</button>
+    </div>
+
+  </form>
+</div>

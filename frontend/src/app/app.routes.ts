@@ -31,6 +31,12 @@ export const appRoutes: Routes = [
         loadComponent: () =>
           import('./features/place-details/place-details.component')
             .then(m => m.PlaceDetailsComponent)
+      },
+      {
+        path: 'add-place',
+        loadComponent: () =>
+          import('./features/add-place/add-place.component')
+            .then(m => m.AddPlaceComponent)
       }
 
     ]
