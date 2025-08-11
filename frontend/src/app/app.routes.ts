@@ -37,7 +37,13 @@ export const appRoutes: Routes = [
         loadComponent: () =>
           import('./features/add-place/add-place.component')
             .then(m => m.AddPlaceComponent)
-      }
+      },
+      {
+        path: 'community',
+        loadComponent: () =>
+          import('./features/community/community.component')
+            .then(m => m.CommunityComponent)
+      },
 
     ]
   }

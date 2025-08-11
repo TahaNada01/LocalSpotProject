@@ -1,0 +1,74 @@
+<div class="page">
+  <!-- Header -->
+  <div class="header">
+    <div class="title">
+      <i class="fa fa-users icon" aria-hidden="true"></i>
+      <span>Community</span>
+    </div>
+    <p class="subtitle">Discover places shared by everyone.</p>
+  </div>
+
+  <!-- Filters -->
+  <form class="filters" [formGroup]="filters">
+    <div class="filter-card">
+      <div class="field">
+        <label>City</label>
+        <input formControlName="city" placeholder="Search by city…" />
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <input formControlName="category" placeholder="e.g. Cafe, Park…" />
+      </div>
+      <button type="button" class="btn primary" (click)="resetAndLoad()">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        <span>Apply</span>
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="error" class="notice error">{{ error }}</div>
+
+  <!-- grid/cards: inchangé -->
+  <div class="grid">
+    <div class="card" *ngFor="let p of items; trackBy: trackById">
+      <div class="thumb" [class.placeholder]="!p.imageUrl">
+        <img [src]="fullImg(p.imageUrl)" alt="{{ p.name }}" (error)="onImgError($event)" />
+        <div *ngIf="!p.imageUrl" class="ph">No image</div>
+      </div>
+
+      <div class="meta">
+        <div class="title">{{ p.name }}</div>
+
+        <div class="addr" *ngIf="p.addressLine || p.city">
+          <i class="fa fa-location-dot" aria-hidden="true"></i>
+          {{ p.addressLine }}<span *ngIf="p.city">, {{ p.city }}</span>
+        </div>
+
+        <div class="chips">
+          <span *ngIf="p.category" class="chip">{{ p.category }}</span>
+          <span *ngIf="euro(p) as eur" class="chip">{{ eur }}</span>
+          <span *ngIf="openStatus(p) as os"
+                class="chip"
+                [class.good]="os.cls === 'open' || os.cls === 'allday'"
+                [class.bad]="os.cls === 'closed'">
+            {{ os.text }}
+          </span>
+        </div>
+
+        <p *ngIf="p.shortDescription" class="desc">{{ p.shortDescription }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="loading && items.length === 0" class="card skeleton" aria-hidden="true"></div>
+    <div *ngIf="loading && items.length === 0" class="card skeleton" aria-hidden="true"></div>
+    <div *ngIf="loading && items.length === 0" class="card skeleton" aria-hidden="true"></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn" (click)="load()" [disabled]="loading || last">
+      <ng-container *ngIf="!loading && !last">Load more</ng-container>
+      <ng-container *ngIf="loading">Loading…</ng-container>
+      <ng-container *ngIf="last">No more</ng-container>
+    </button>
+  </div>
+</div>
