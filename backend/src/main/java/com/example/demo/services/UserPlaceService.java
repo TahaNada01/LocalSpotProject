@@ -68,6 +68,9 @@ public class UserPlaceService {
         e.setImageUrl(imageUrl);
         e.setCreatedBy(author);
 
+        //valider automatiquement
+        e.setStatus(UserPlace.Status.APPROVED);
+
         UserPlace saved = placeRepo.save(e);
         return toDto(saved);
     }
@@ -160,7 +163,17 @@ public class UserPlaceService {
                 p.getName(),
                 p.getImageUrl(),
                 createdById,
-                p.getOpeningHoursJson()
+                p.getOpeningHoursJson(),
+
+                p.getAddressLine(),
+                p.getCity(),
+                p.getPostalCode(),
+                p.getCountry(),
+                p.getCategory(),
+                p.getShortDescription(),
+                p.getAvgPrice(),
+                p.getPriceRange()
         );
     }
+
 }
