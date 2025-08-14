@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { PlaceService } from '../../core/services/places.service';
 import { CategoriesService } from '../../core/services/categories.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 import { environment } from '../../../environments/environment';
 import { FiltersDrawerComponent } from '../filters/filters-drawer.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-
+import { Favorite } from '../../core/models/favorite.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -31,12 +33,13 @@ export class HomeComponent implements OnInit {
   drawerOpen: boolean = false;
   searchTerm: string = '';
   isLoading: boolean = false;
-
-
+  favorites: Favorite[] = [];
 
   constructor(
     private placeService: PlaceService,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    private favoritesService: FavoritesService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -47,74 +50,124 @@ export class HomeComponent implements OnInit {
     if (savedType) this.type = savedType;
 
     this.categories = this.categoriesService.getCategories();
+    this.loadFavorites();
     this.chargerLieux();
   }
 
-  chargerLieux(): void {
-  this.isLoading = true; // Début du chargement
-  localStorage.setItem('ville', this.ville);
-  localStorage.setItem('type', this.type);
-
-  this.placeService.getPlaces(this.ville, this.type).subscribe({
-    next: (data) => {
-      const firstPage = data.results;
-
-      if (data.next_page_token) {
-        // Petit délai avant la 2e page
-        setTimeout(() => {
-          this.placeService.getNextPage(data.next_page_token).subscribe({
-            next: (nextData) => {
-              const fullResults = [...firstPage, ...nextData.results];
-              this.allPlaces = fullResults;
-              this.places = [...this.allPlaces];
-
-              if (this.searchTerm.trim()) {
-                this.onSearch();
-              }
-
-              this.isLoading = false; // Fin du chargement
-            },
-            error: (err) => {
-              console.error('Erreur lors du chargement de la 2e page', err);
-              this.allPlaces = [...firstPage];
-              this.places = [...this.allPlaces];
-              this.isLoading = false; // Fin même en cas d'erreur
-            }
-          });
-        }, 1500);
-      } else {
-        this.allPlaces = [...firstPage];
-        this.places = [...this.allPlaces];
-
-        if (this.searchTerm.trim()) {
-          this.onSearch();
-        }
-
-        this.isLoading = false; // Fin du chargement
+  loadFavorites(): void {
+    this.favoritesService.getFavorites().subscribe({
+      next: (data: Favorite[]) => {
+        this.favorites = data;
+        // On met à jour les lieux si déjà chargés
+        this.places.forEach(place => {
+          place.favorite = this.favorites.some(fav => fav.placeId === place.place_id);
+        });
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des favoris', err);
       }
-    },
-    error: (err) => {
-      console.error('Erreur lors du chargement des lieux', err);
-      this.isLoading = false; // Fin même en cas d’erreur
-    }
-  });
-}
+    });
+  }
 
+  chargerLieux(): void {
+    this.isLoading = true;
+    localStorage.setItem('ville', this.ville);
+    localStorage.setItem('type', this.type);
 
+    this.placeService.getPlaces(this.ville, this.type).subscribe({
+      next: (data) => {
+        const firstPage = data.results;
+
+        if (data.next_page_token) {
+          setTimeout(() => {
+            this.placeService.getNextPage(data.next_page_token).subscribe({
+              next: (nextData) => {
+                const fullResults = [...firstPage, ...nextData.results];
+                this.allPlaces = fullResults;
+                this.markFavorites();
+                this.places = [...this.allPlaces];
+                if (this.searchTerm.trim()) {
+                  this.onSearch();
+                }
+                this.isLoading = false;
+              },
+              error: (err) => {
+                console.error('Erreur lors du chargement de la 2e page', err);
+                this.allPlaces = [...firstPage];
+                this.markFavorites();
+                this.places = [...this.allPlaces];
+                this.isLoading = false;
+              }
+            });
+          }, 1500);
+        } else {
+          this.allPlaces = [...firstPage];
+          this.markFavorites();
+          this.places = [...this.allPlaces];
+          if (this.searchTerm.trim()) {
+            this.onSearch();
+          }
+          this.isLoading = false;
+        }
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des lieux', err);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  markFavorites(): void {
+    this.allPlaces.forEach(place => {
+      place.favorite = this.favorites.some(fav => fav.placeId === place.place_id);
+    });
+  }
 
   onSearch(): void {
     const query = this.searchTerm.trim().toLowerCase();
-
     if (!query) {
-      this.places = [...this.allPlaces]; // reset
+      this.places = [...this.allPlaces];
       return;
     }
-
     this.places = this.allPlaces.filter(place =>
       place.name?.toLowerCase().includes(query) ||
       place.formatted_address?.toLowerCase().includes(query) ||
       place.types?.some((t: string) => t.includes(query))
     );
+  }
+
+  toggleFavorite(place: any): void {
+    if (place.favorite) {
+      this.favoritesService.deleteFavorite(place.place_id).subscribe({
+        next: () => {
+          place.favorite = false;
+          this.loadFavorites(); //recharge la liste des favoris
+        },
+        error: (err) => {
+          console.error('Erreur suppression favori :', err);
+        }
+      });
+    } else {
+      const newFavorite = {
+        placeId: place.place_id,
+        name: place.name,
+        address: place.formatted_address,
+        photoReference: place.photos?.[0]?.photo_reference || '',
+        rating: place.rating || null,
+        openNow: place.opening_hours?.open_now ?? null
+      };
+
+      console.log(' Envoi du favori :', newFavorite);
+      this.favoritesService.addFavorite(newFavorite).subscribe({
+        next: () => {
+          place.favorite = true;
+          this.loadFavorites(); //recharge après ajout
+        },
+        error: (err) => {
+          console.error('Erreur ajout favori :', err);
+        }
+      });
+    }
   }
 
 
@@ -129,12 +182,9 @@ export class HomeComponent implements OnInit {
   }
 
   getPhotoUrl(photoReference: string): string {
-    return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoReference}&key=${environment.googleApiKey}`;
+  return this.placeService.getPhotoUrl(photoReference, 400);
   }
 
-  toggleFavorite(place: any): void {
-    place.favorite = !place.favorite;
-  }
 
   resetFilters(): void {
     this.ville = 'Paris';
@@ -145,15 +195,19 @@ export class HomeComponent implements OnInit {
   }
 
   onApplyFilters(filters: { city: string; type: string }): void {
-  this.ville = filters.city.trim() || 'Paris'; // valeur par défaut
-  this.type = filters.type || 'bar'; // valeur par défaut
-  this.drawerOpen = false;
-  this.chargerLieux();
+    this.ville = filters.city.trim() || 'Paris';
+    this.type = filters.type || 'bar';
+    this.drawerOpen = false;
+    this.chargerLieux();
   }
 
   resetSearch(): void {
     this.searchTerm = '';
-    this.places = [...this.allPlaces]; // reset affichage
+    this.places = [...this.allPlaces];
+  }
+
+  openDetails(placeId: string): void {
+  this.router.navigate(['/places', placeId]);
   }
 
 

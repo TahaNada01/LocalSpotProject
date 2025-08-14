@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.UpdateUserRequest;
+import com.example.demo.dto.UserDTO;
 import com.example.demo.entities.User;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.services.UserService;
@@ -66,18 +67,23 @@ public class UserController {
     public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
 
-        if (!jwtUtil.isTokenValid(refreshToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
-        }
-
+        // Extraire l'email AVANT toute vérification
         String email = jwtUtil.extractEmail(refreshToken);
         Optional<User> userOpt = userService.findByEmail(email);
 
-        if (userOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
+        }
+
+        // Vérifier avec userDetails (ici user)
+        if (!jwtUtil.isTokenValid(refreshToken, userOpt.get())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+        }
 
         String newAccessToken = jwtUtil.generateToken(email, userOpt.get().getRole());
-        return ResponseEntity.ok(new LoginResponse(newAccessToken, refreshToken)); // refresh token same
+        return ResponseEntity.ok(new LoginResponse(newAccessToken, refreshToken));
     }
+
 
 
     @PostMapping("/logout")
@@ -103,8 +109,18 @@ public class UserController {
     //Récuperer les infos de l'utilisateur connecté
     @GetMapping("/me")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(user);
+        UserDTO dto = new UserDTO(
+                user.getId(),
+                user.getNom(),
+                user.getEmail(),
+                user.getAdresse(),
+                user.getVille(),
+                user.getProfilPhoto(),
+                user.getRole()
+        );
+        return ResponseEntity.ok(dto);
     }
+
 
     //update des infos user
     @PutMapping("/update")

@@ -63,7 +63,7 @@
         </div>
 
         <div class="card-body">
-          <h3 class="place-title">{{ place.name }}</h3>
+          <h3 class="place-title" (click)="openDetails(place.place_id)">{{ place.name }}</h3>
           <a class="place-address" [routerLink]="['/map']" [queryParams]="{ query: place.formatted_address }" title="Voir sur la carte">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon-location" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

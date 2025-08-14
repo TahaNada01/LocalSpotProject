@@ -1,57 +1,249 @@
 <div class="profile-container">
-    <div class="profile-header">
-      <div class="profile-info">
-        <div class="avatar">
-          <img *ngIf="user.profilPhoto" [src]="user.profilPhoto" alt="Avatar" />
-          <span *ngIf="!user.profilPhoto">{{ user.nom.charAt(0) || 'U' }}</span>
-        </div>
-        <div class="user-text">
-          <h2>{{ user.nom }}</h2>
-          <p class="email">{{ user.email }}</p>
-          <p class="city">{{ user.ville }}</p>
-        </div>
+  <div class="profile-header">
+    <div class="profile-info">
+      <div class="avatar">
+        <img *ngIf="user.profilPhoto" [src]="user.profilPhoto" alt="Avatar" />
+        <span *ngIf="!user.profilPhoto">{{ user.nom.charAt(0) || 'U' }}</span>
       </div>
-  
-      <!-- Le bouton doit être ici -->
-      <button class="edit-btn" (click)="isEditing = !isEditing">
-        {{ isEditing ? 'Cancel' : 'Edit Profile' }}
-      </button>      
-    </div>
-
-    <!-- MODAL -->
-    <div class="modal-backdrop" *ngIf="isEditing" (click)="isEditing = false"></div>
-
-    <div class="modal" *ngIf="isEditing">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <h3>Edit Profil</h3>
-        <form (ngSubmit)="onSubmit()" #editForm="ngForm" class="edit-form">
-          <input type="text" name="nom" [(ngModel)]="user.nom" placeholder="Nom" required />
-          <input type="email" name="email" [(ngModel)]="user.email" placeholder="Email" required />
-          <input type="text" name="ville" [(ngModel)]="user.ville" placeholder="Ville" />
-          <input
-          type="password"
-          name="motDePasse"
-          [(ngModel)]="newPassword"
-          placeholder="••••••••" />
-          <div class="modal-actions">
-            <button type="submit" class="cta">Sauvegarder</button>
-            <button type="button" class="cancel" (click)="isEditing = false">Annuler</button>
-          </div>
-        </form>
+      <div class="user-text">
+        <h2>{{ user.nom }}</h2>
+        <p class="email">{{ user.email }}</p>
+        <p class="city">{{ user.ville }}</p>
       </div>
     </div>
 
-  
-    <div class="tabs">
-      <div class="tab" [class.active]="activeTab === 'places'" (click)="activeTab = 'places'">Places</div>
-      <div class="tab" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">Reviews</div>
-      <div class="tab" [class.active]="activeTab === 'favorites'" (click)="activeTab = 'favorites'">Favorites</div>
-    </div>
-  
-    <div class="content-box" *ngIf="activeTab === 'places'">
-      <div class="title">No places yet</div>
-      <div class="desc">You haven't added any places yet.</div>
-      <button class="cta">Add Your First Place</button>
+    <button class="edit-btn" (click)="isEditing = !isEditing">
+      {{ isEditing ? 'Cancel' : 'Edit Profile' }}
+    </button>
+  </div>
+
+  <!-- MODAL (édition du profil) -->
+  <div class="modal-backdrop" *ngIf="isEditing" (click)="isEditing = false"></div>
+  <div class="modal" *ngIf="isEditing">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Edit Profil</h3>
+      <form (ngSubmit)="onSubmit()" #editForm="ngForm" class="edit-form">
+        <input type="text" name="nom" [(ngModel)]="user.nom" placeholder="Nom" required />
+        <input type="email" name="email" [(ngModel)]="user.email" placeholder="Email" required />
+        <input type="text" name="ville" [(ngModel)]="user.ville" placeholder="Ville" />
+        <input type="password" name="motDePasse" [(ngModel)]="newPassword" placeholder="••••••••" />
+        <div class="modal-actions">
+          <button type="submit" class="cta">save</button>
+          <button type="button" class="cancel" (click)="isEditing = false">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
-  
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab" [class.active]="activeTab === 'places'" (click)="setActive('places')">Places</div>
+    <div class="tab" [class.active]="activeTab === 'reviews'" (click)="setActive('reviews')">Reviews</div>
+    <div class="tab" [class.active]="activeTab === 'favorites'" (click)="setActive('favorites')">Favoris</div>
+  </div>
+
+  <!-- PLACES (mes créations) -->
+  <div class="content-box my-places" *ngIf="activeTab === 'places'">
+    <!-- loading -->
+    <div *ngIf="loadingPlaces">
+      <div class="grid">
+        <div class="card skeleton" *ngFor="let i of [0,1,2,3]"></div>
+      </div>
+    </div>
+
+    <!-- error -->
+    <div *ngIf="!loadingPlaces && placesError" class="notice error">
+      {{ placesError }}
+    </div>
+
+    <!-- list -->
+    <ng-container *ngIf="!loadingPlaces && !placesError">
+      <div *ngIf="myPlaces.length > 0; else noPlaces" class="grid">
+        <div class="card" *ngFor="let p of myPlaces">
+          <!-- ===== Actions overlay (EDIT + DELETE) ===== -->
+          <div class="fab">
+            <button
+              type="button"
+              class="icon"
+              title="Edit"
+              aria-label="Edit place"
+              (click)="openEdit(p)">
+              <i class="fa fa-pen"></i>
+            </button>
+            <button
+              type="button"
+              class="icon danger"
+              title="Delete"
+              aria-label="Delete place"
+              (click)="confirmDelete(p)"
+              [disabled]="deletingId === p.id">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+
+          <div class="thumb" [class.placeholder]="!p.imageUrl">
+            <div
+              class="bg-img"
+              [ngStyle]="{
+                'background-image': p.imageUrl ? 'url(' + fullImg(p.imageUrl) + ')' : 'none'
+              }"
+            ></div>
+          </div>
+
+          <div class="meta">
+            <div class="title">{{ p.name }}</div>
+
+            <div class="addr" *ngIf="p.addressLine || p.city">
+              <i class="fa fa-location-dot" aria-hidden="true"></i>
+              <a
+                [routerLink]="['/map']"
+                [queryParams]="{ query: (p.addressLine || '') + (p.city ? ' ' + p.city : '') }"
+                title="View on map"
+                (click)="$event.stopPropagation()"
+              >
+                {{ p.addressLine }}<span *ngIf="p.city">, {{ p.city }}</span>
+              </a>
+            </div>
+
+            <div class="chips">
+              <span *ngIf="p.category" class="chip">{{ p.category }}</span>
+              <span *ngIf="priceTag(p) as eur" class="chip">{{ eur }}</span>
+
+              <!-- Ouvert/Fermé comme Community -->
+              <span *ngIf="openStatus(p) as os"
+                    class="chip"
+                    [class.good]="os.cls === 'open' || os.cls === 'allday'"
+                    [class.bad]="os.cls === 'closed'">
+                {{ os.text }}
+              </span>
+            </div>
+
+            <p *ngIf="p.shortDescription" class="desc">{{ p.shortDescription }}</p>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noPlaces>
+        <div class="title">No places yet</div>
+        <div class="desc">You haven't added any places yet.</div>
+        <a class="cta" href="/add">Add Your First Place</a>
+      </ng-template>
+    </ng-container>
+  </div>
+
+  <!-- FAVORITES -->
+  <div class="content-box" *ngIf="activeTab === 'favorites'">
+    <div *ngIf="transformedFavorites.length > 0; else noFavorites">
+      <div class="grid">
+        <app-place-card
+          *ngFor="let fav of transformedFavorites"
+          [place]="fav"
+          [isFavorite]="true"
+          [showRemoveButton]="true"
+          (remove)="deleteFavorite(fav.placeId)">
+        </app-place-card>
+      </div>
+    </div>
+
+    <ng-template #noFavorites>
+      <div class="title">No favorites yet</div>
+      <div class="desc">You haven't added any favorites yet.</div>
+    </ng-template>
+  </div>
+</div>
+
+<!-- ==================== MODALE EDIT PLACE ==================== -->
+<div class="modal-backdrop" *ngIf="editOpen" (click)="cancelEdit()"></div>
+<div class="modal modal-wide" *ngIf="editOpen">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Edit place</h3>
+
+    <form (ngSubmit)="submitEdit()" #placeForm="ngForm" class="edit-form">
+      <div class="edit-grid">
+        <!-- ligne 1 -->
+        <input name="name" [(ngModel)]="editModel.name" placeholder="Name" required />
+        <input name="category" [(ngModel)]="editModel.category" placeholder="Category" />
+
+        <!-- ligne 2 -->
+        <input name="addressLine" [(ngModel)]="editModel.addressLine" placeholder="Address line" />
+        <input name="city" [(ngModel)]="editModel.city" placeholder="City" />
+
+        <!-- ligne 3 -->
+        <input name="postalCode" [(ngModel)]="editModel.postalCode" placeholder="Postal code" />
+        <input name="country" [(ngModel)]="editModel.country" placeholder="Country" />
+
+        <!-- description -->
+        <textarea name="shortDescription" [(ngModel)]="editModel.shortDescription" placeholder="Short description"></textarea>
+
+        <!-- prix -->
+        <input type="number" name="avgPrice" [(ngModel)]="editModel.avgPrice" placeholder="Avg price" min="0" />
+        <select name="priceRange" [(ngModel)]="editModel.priceRange">
+          <option value="">(auto)</option>
+          <option value="€">€</option>
+          <option value="€€">€€</option>
+          <option value="€€€">€€€</option>
+        </select>
+
+        <!-- === HOURS EDITOR === -->
+        <div class="hours-editor" style="grid-column: 1 / -1;">
+          <div class="hours-head">
+            <div class="title">Opening hours</div>
+            <div class="actions">
+              <button type="button" class="btn tiny" (click)="copyMonToAll()">Copy Monday to all</button>
+              <button type="button" class="btn tiny ghost" (click)="showRawHours = !showRawHours">
+                {{ showRawHours ? 'Hide JSON' : 'Edit as JSON (advanced)' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="hours-table">
+            <div class="hours-row" *ngFor="let d of dayKeys">
+              <div class="day">{{ dayLabel[d] }}</div>
+
+              <label class="chk">
+                <input type="checkbox"
+                       [(ngModel)]="hours[d].closed"
+                       name="closed-{{d}}"
+                       (ngModelChange)="onClosedChange(d)" />
+                Closed
+              </label>
+
+              <label class="chk">
+                <input type="checkbox"
+                       [(ngModel)]="hours[d].allDay"
+                       name="allday-{{d}}"
+                       (ngModelChange)="onAllDayChange(d)" />
+                24h
+              </label>
+
+              <div class="times" *ngIf="!hours[d].closed && !hours[d].allDay">
+                <input type="time" [(ngModel)]="hours[d].open"  name="open-{{d}}" />
+                <span>–</span>
+                <input type="time" [(ngModel)]="hours[d].close" name="close-{{d}}" />
+              </div>
+            </div>
+          </div>
+
+          <!-- JSON avancé (optionnel) -->
+          <textarea *ngIf="showRawHours"
+                    class="raw-json"
+                    [(ngModel)]="editModel.openingHoursJson"
+                    name="openingHoursJson"
+                    placeholder='{"mon":{"open":"09:00","close":"18:00"}, ... }'></textarea>
+        </div>
+
+        <!-- photo -->
+        <div class="file-row" style="grid-column: 1 / -1;">
+          <label>New photo (optional)</label>
+          <input type="file" (change)="onEditFile($event)" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" class="cta" [disabled]="savingEdit">{{ savingEdit ? 'Saving…' : 'Save' }}</button>
+        <button type="button" class="cancel" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+

@@ -1,0 +1,27 @@
+.favorites-page {
+  padding: 2rem;
+  background-color: #f9f9fc;
+  min-height: 100vh;
+
+  .favorites-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #4c1d95;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  .no-favorites {
+    color: #666;
+    font-size: 1.1rem;
+    margin-top: 2rem;
+  }
+}

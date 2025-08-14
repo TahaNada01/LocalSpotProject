@@ -1,0 +1,23 @@
+<div class="favorites-page">
+  <h2 class="favorites-title">
+    <i class="fa fa-heart"></i> My Favorite Places
+  </h2>
+
+
+  <div *ngIf="isLoadingFavorites">
+    Chargement en cours...
+  </div>
+
+  <div *ngIf="!isLoadingFavorites && transformedFavorites.length === 0">
+    You haven't added any favorites yet.
+  </div>
+
+  <div class="favorites-grid">
+    <app-place-card
+      *ngFor="let place of transformedFavorites"
+      [place]="place"
+      [showRemoveButton]="true"
+      (remove)="deleteFavorite(place.placeId)">
+    </app-place-card>
+  </div>
+</div>
