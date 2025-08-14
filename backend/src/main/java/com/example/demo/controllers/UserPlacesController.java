@@ -1,16 +1,17 @@
+// src/main/java/com/example/demo/controllers/UserPlacesController.java
 package com.example.demo.controllers;
 
 import com.example.demo.dto.CreateUserPlaceRequest;
+import com.example.demo.dto.UpdateUserPlaceRequest;
 import com.example.demo.dto.UserPlaceResponse;
 import com.example.demo.services.UserPlaceService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.demo.dto.UpdateUserPlaceRequest;
 
 import java.security.Principal;
 import java.util.List;
@@ -25,7 +26,6 @@ public class UserPlacesController {
         this.service = service;
         this.objectMapper = objectMapper;
     }
-
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -43,19 +43,29 @@ public class UserPlacesController {
         return ResponseEntity.noContent().build();
     }
 
+    // PATCH + PUT sur le même handler, et on accepte "place" (POJO) OU "data" (String JSON)
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping(value="/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserPlaceResponse> update(
+    @RequestMapping(
+            value = "/{id}",
+            method = { RequestMethod.PATCH, RequestMethod.PUT },
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<UserPlaceResponse> upsert(
             @PathVariable Long id,
-            @RequestPart(value="data", required=false) String dataJson,
+            @RequestPart(value="place", required=false) UpdateUserPlaceRequest place,
+            @RequestPart(value="data",  required=false) String dataJson,
             @RequestPart(value="photo", required=false) MultipartFile photo,
-            Principal principal) throws Exception {
+            Principal principal
+    ) throws Exception {
 
-        UpdateUserPlaceRequest data = (dataJson == null || dataJson.isBlank())
-                ? new UpdateUserPlaceRequest()
-                : objectMapper.readValue(dataJson, UpdateUserPlaceRequest.class);
+        UpdateUserPlaceRequest payload = place;
+        if (payload == null) {
+            payload = (dataJson == null || dataJson.isBlank())
+                    ? new UpdateUserPlaceRequest()
+                    : objectMapper.readValue(dataJson, UpdateUserPlaceRequest.class);
+        }
 
-        return ResponseEntity.ok(service.update(id, data, photo, principal.getName()));
+        return ResponseEntity.ok(service.update(id, payload, photo, principal.getName()));
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -70,5 +80,3 @@ public class UserPlacesController {
         return ResponseEntity.ok(service.getMine(id, principal.getName()));
     }
 }
-
-
