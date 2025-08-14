@@ -32,17 +32,30 @@
   <div class="grid">
     <div class="card" *ngFor="let p of items; trackBy: trackById">
       <div class="thumb" [class.placeholder]="!p.imageUrl">
-        <img [src]="fullImg(p.imageUrl)" alt="{{ p.name }}" (error)="onImgError($event)" />
+        <div
+          class="bg-img"
+          [ngStyle]="{
+            'background-image': p.imageUrl ? 'url(' + fullImg(p.imageUrl) + ')' : 'none'
+          }"
+        ></div>
         <div *ngIf="!p.imageUrl" class="ph">No image</div>
       </div>
+
 
       <div class="meta">
         <div class="title">{{ p.name }}</div>
 
-        <div class="addr" *ngIf="p.addressLine || p.city">
+        <a
+          class="addr"
+          *ngIf="p.addressLine || p.city"
+          [routerLink]="['/map']"
+          [queryParams]="{ query: (p.addressLine || '') + (p.city ? ' ' + p.city : '') }"
+          title="View on map"
+          (click)="$event.stopPropagation()">
           <i class="fa fa-location-dot" aria-hidden="true"></i>
           {{ p.addressLine }}<span *ngIf="p.city">, {{ p.city }}</span>
-        </div>
+        </a>
+
 
         <div class="chips">
           <span *ngIf="p.category" class="chip">{{ p.category }}</span>

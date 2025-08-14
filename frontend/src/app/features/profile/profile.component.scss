@@ -1,191 +1,264 @@
 .profile-container {
-    padding: 2rem;
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  
-  
-  .profile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-    margin-bottom: 2rem;
-  }
-  
-  .profile-info {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  
-  .avatar {
-    width: 70px;
-    height: 70px;
-    background-color: #ddd;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: bold;
-    overflow: hidden;
-  }
-  
-  .avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-  
-  .user-text h2 {
-    margin: 0;
-    font-size: 1.5rem;
-  }
-  
-  .username,
-  .email,
-  .city {
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: 2px;
-  }
-  
-  .username {
-    font-weight: 500;
-  }
-  
-  .edit-btn {
-    padding: 0.5rem 1rem;
-    border: 1px solid #ccc;
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-    
-  
-  .tabs {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .tab {
-    padding: 0.4rem 1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    background-color: #f1f1f1;
-    color: #444;
-    font-weight: 500;
-  }
-  
-  .tab.active {
-    background-color: #8b5cf6;
-    color: white;
-  }
-  
-  .content-box {
-    text-align: center;
-  }
-  
-  .content-box .title {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-  
-  .content-box .desc {
-    color: #666;
-    margin: 0.5rem 0 1.2rem;
-  }
-  
-  .content-box .cta {
-    background-color: #8b5cf6;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+  padding: 2rem;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* -------- Header / profil -------- */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.avatar {
+  width: 70px; height: 70px; background-color: #ddd; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: bold; overflow: hidden;
+
+  img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+}
+.user-text h2 { margin: 0; font-size: 1.5rem; }
+.username, .email, .city { font-size: 0.85rem; color: #666; margin-top: 2px; }
+.username { font-weight: 500; }
+.edit-btn {
+  padding: 0.5rem 1rem; border: 1px solid #ccc; background: #fff;
+  border-radius: 6px; cursor: pointer;
+}
+
+/* -------- Tabs -------- */
+.tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+.tab {
+  padding: 0.4rem 1rem; border-radius: 10px; cursor: pointer;
+  background-color: #f1f1f1; color: #444; font-weight: 500;
+}
+.tab.active { background-color: #8b5cf6; color: #fff; }
+
+/* -------- Sections génériques -------- */
+.content-box { text-align: center; }
+.content-box .title { font-size: 1.2rem; font-weight: 600; }
+.content-box .desc  { color: #666; margin: 0.5rem 0 1.2rem; }
+.content-box .cta   {
+  background-color: #8b5cf6; color: #fff; padding: 0.6rem 1.2rem;
+  border: none; border-radius: 8px; cursor: pointer;
+}
+
+/* -------- Modales (profil & edit place) -------- */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 99;
+}
+
+
+.modal {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: min(760px, 92vw);
+  max-height: 88vh;
+  background: #fff;
+  padding: 1.25rem;
+  border-radius: 10px;
+  z-index: 100;
+  box-shadow: 0 10px 25px rgba(0,0,0,.2);
+}
+
+
+.modal-content {
+  width: min(760px, 92vw);
+  max-height: 90vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.18);
+  padding: 20px;
+}
+.modal * { box-sizing: border-box; max-width: 100%; }
+
+
+.modal-actions {
+  position: sticky; bottom: 0;
+  background: #fff;
+  padding-top: 12px; margin-top: 12px;
+  border-top: 1px solid #eee;
+  display: flex; justify-content: flex-end; gap: .5rem;
+}
+
+@media (max-width: 850px) {
+  .modal-content { width: min(640px, 94vw); padding: 16px; }
+  .edit-form .edit-grid { grid-template-columns: 1fr; }
+}
+
+/* -------- Form edit place -------- */
+.edit-form .edit-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.edit-form textarea { min-height: 110px; grid-column: 1 / -1; }
+
+/* ---- Hours editor ---- */
+.hours-editor {
+  border: 1px solid #eee; border-radius: 10px; padding: 12px; background: #fafafa;
+
+  .hours-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+
+    .title { font-weight: 700; }
+    .actions { display: flex; gap: 8px; }
+    .btn.tiny {
+      padding: 4px 8px; border-radius: 8px; border: 1px solid #e5e7eb;
+      background: #fff; cursor: pointer; font-size: 12px; font-weight: 600;
+    }
+    .btn.tiny.ghost { background: #f8f7ff; }
   }
 
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 99;
+  .hours-table { display: grid; gap: 6px; }
+
+  .hours-row {
+    display: grid;
+    grid-template-columns: 80px 90px 70px 1fr;
+    gap: 8px; align-items: center;
+    padding: 6px 8px; border-radius: 8px; background: #fff;
+
+    .day { font-weight: 600; }
+    .chk { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #374151; }
+
+    .times {
+      display: inline-flex; gap: 6px; flex-wrap: wrap;
+      input[type="time"] {
+        padding: 6px 8px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 13px;
+        width: 120px;
+      }
+      span { opacity: .6; }
+    }
   }
-  
-  .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    z-index: 100;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+  .raw-json {
+    margin-top: 8px; width: 100%; min-height: 120px;
+    padding: 10px; border: 1px solid #e5e7eb; border-radius: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 12px; background: #fff;
   }
-  
-  .modal-content h3 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-  
-  .edit-form input {
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
-  
-  .modal-actions .cta {
-    background-color: #8b5cf6;
-    color: white;
-    border: none;
-    padding: 0.6rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  .modal-actions .cancel {
-    background: transparent;
-    border: none;
-    color: #666;
-    cursor: pointer;
-  }
+}
+
+/* -------- Grille générique -------- */
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem; justify-content: center; margin-top: 1rem;
+
+  @media (max-width: 1024px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 640px)  { grid-template-columns: 1fr; }
+}
+
+/* -------- Cartes "My places" -------- */
+.my-places {
+  text-align: initial;
 
   .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    justify-content: center;
-    margin-top: 1rem;
-
-    @media (max-width: 1024px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: 640px) {
-      grid-template-columns: 1fr;
-    }
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 600px) { grid-template-columns: 1fr; }
   }
 
+  .card {
+    position: relative;
+    border: 1px solid #e9e9ef; border-radius: 14px; overflow: hidden; background: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,.04);
+  }
 
   
-  
-  
+  .card .thumb {
+    position: relative;
+    height: 180px;
+    background: #f5f5fa;
+    overflow: hidden;
+    display: block;
+  }
+  .card .thumb .bg-img {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+  .card .thumb.placeholder .bg-img {
+    background: #f5f5fa; 
+  }
+
+  /*(edit + delete) */
+  .fab {
+    position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; z-index: 2;
+    .icon {
+      width: 34px; height: 34px; border: none; border-radius: 999px; background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,.12); display: grid; place-items: center; cursor: pointer;
+    }
+    .icon:hover { background: #f8f7ff; }
+    .icon.danger { color: #b42318; }
+    .icon:disabled { opacity: .6; cursor: not-allowed; }
+  }
+
+  .meta {
+    padding: 12px; text-align: left;
+
+    .title { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+
+    .desc  {
+      color:#374151; font-size:13px; margin-top:6px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+    }
+
+    .addr  {
+      color:#6b7280; font-size:13px; margin-top:2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+    .chip  {
+      background:#f3f4f6; border:1px solid #e5e7eb; color:#374151;
+      font-size:12px; padding:2px 8px; border-radius:999px;
+    }
+    .chips .chip.good   { background:#e8f9ee; color:#0a7a3e; }
+    .chips .chip.bad    { background:#fde8e8; color:#b42318; }
+    .chips .chip.allday { background:#e8f9ee; color:#0a7a3e; }
+    .chips .chip.unknown{ background:#eef2ff; color:#3730a3; }
+  }
+
+  .card.skeleton {
+    height: 270px;
+    background: linear-gradient(90deg, #f6f7f9 25%, #eef1f5 37%, #f6f7f9 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+    border-radius: 14px;
+  }
+}
+
+/* -------- Notices -------- */
+.notice.error {
+  background: #fff1f2; border: 1px solid #fecaca; color: #991b1b;
+  padding: 10px 12px; border-radius: 10px; margin-bottom: 12px;
+}
+
+/* -------- Anim -------- */
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+/* -------- Grille des champs modale -------- */
+.edit-form .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.edit-form .edit-grid > * { min-width: 0; }
+.edit-form input,
+.edit-form select,
+.edit-form textarea {
+  width: 100%; padding: .55rem .7rem; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;
+}
+.edit-form textarea { min-height: 90px; grid-column: 1 / -1; }
+.edit-form .file-row { grid-column: 1 / -1; display: flex; gap: 10px; align-items: center; }

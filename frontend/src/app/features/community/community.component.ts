@@ -4,13 +4,15 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { CommunityService } from '../../core/services/community.service';
 import { PublicPlace, PageResp } from '../../core/models/community.models';
+import { Router, RouterModule } from '@angular/router';
+
 
 type DayKey = 'sun'|'mon'|'tue'|'wed'|'thu'|'fri'|'sat';
 
 @Component({
   selector: 'app-community',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './community.component.html',
   styleUrls: ['./community.component.scss']
 })
