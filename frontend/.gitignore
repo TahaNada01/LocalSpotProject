@@ -1,26 +1,70 @@
-# Global
-node_modules/
-dist/
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Frontend
-/frontend/node_modules/
-/frontend/dist/
-
-# Backend
-/backend/target/
-/backend/.mvn/
-/backend/*.iml
-
-# IDEs
-*.log
-*.idea/
-.vscode/
-.angular/cache
-
-# Ne pas versionner la clé API locale
+# Ne pas versionner les fichiers environment avec clés API
 /src/environments/environment.ts
+/src/environments/environment.prod.ts
 
-# Ne pas versionner les fichiers de configuration sensibles (backend)
-backend/src/main/resources/application.properties
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Build files
+*.tgz
+*.tar.gz
+
+# Angular specific
+.angular/

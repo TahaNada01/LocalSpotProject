@@ -1,0 +1,45 @@
+# Fichiers et dossiers à ignorer lors de la construction Docker
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+/dist
+/tmp
+/out-tsc
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+/coverage
+*.tgz
+*.tar.gz
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Angular
+.angular/
+*.tsbuildinfo
+
+# Logs
+*.log
+
+# Documentation
+README.md
+*.md
