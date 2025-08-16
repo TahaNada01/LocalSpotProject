@@ -1,0 +1,39 @@
+# Fichiers et dossiers à ignorer lors de la construction Docker
+
+# Maven
+target/
+!target/*.jar
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# Spring Boot
+spring.log
+
+# Tests
+src/test/
+
+# Documentation
+README.md
+*.md
