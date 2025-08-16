@@ -31,3 +31,40 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Configuration sensible ###
+# Ne pas versionner les fichiers de config avec données sensibles
+src/main/resources/application.properties
+src/main/resources/application-prod.properties
+src/main/resources/application-dev.properties
+
+# Garder les fichiers d'exemple et Docker
+!src/main/resources/application.example.properties
+!src/main/resources/application-docker.properties
+
+### Uploads et fichiers utilisateurs ###
+uploads/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+
+### Logs ###
+*.log
+logs/
+
+### OS ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Temp files ###
+*.tmp
+*.bak
+*.swp
+*~.nib
