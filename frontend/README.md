@@ -4,7 +4,7 @@ Application Angular pour découvrir et partager des lieux locaux.
 
 ---
 
-##Démarrage rapide
+## Démarrage rapide
 
 ### 1. Prérequis
 
@@ -34,8 +34,38 @@ export const environment = {
   googleApiKey: 'VOTRE_CLE_GOOGLE_MAPS'
 };
 ```
+## 4. Lancement de l'application
 
-### 4. Lancer l'application
+##  Docker
+
+### Option 1 : Docker Compose (application complète Recommandé)
+
+```bash
+# Depuis la racine du projet (LocalSpot/)
+cd ..
+
+# Lancement complet (Backend + Database + Frontend)
+docker-compose up --build
+
+# Arrêter tous les services
+docker-compose down
+```
+
+### Option 2 : Docker simple (frontend seulement)
+
+```bash
+# Construire l'image
+docker build -t localspot-frontend .
+
+# Lancer le conteneur
+docker run -p 4200:8080 localspot-frontend
+```
+
+**L'application sera accessible sur http://localhost:4200**
+
+---
+
+### 5. Lancer l'application en mode développement
 
 ```bash
 # Démarrer le serveur de développement
@@ -48,7 +78,7 @@ ng serve
 
 ---
 
-## Tests
+## 6. Tests
 
 ### Lancer les tests
 
@@ -76,39 +106,7 @@ Le rapport détaillé est généré dans `coverage/frontend/index.html`
 
 ---
 
-##  Docker
-
-### Option 1 : Docker simple (frontend seulement)
-
-```bash
-# Construire l'image
-docker build -t localspot-frontend .
-
-# Lancer le conteneur
-docker run -p 4200:8080 localspot-frontend
-```
-
-### Option 2 : Docker Compose (application complète)
-
-```bash
-# Depuis la racine du projet (LocalSpot/)
-cd ..
-
-# Lancer tous les services (frontend + backend + database)
-docker-compose up
-
-# Ou en arrière-plan
-docker-compose up -d
-
-# Arrêter tous les services
-docker-compose down
-```
-
-**L'application sera accessible sur http://localhost:4200**
-
----
-
-## 🛠️ Développement
+## Développement
 
 ### Commandes utiles
 
@@ -171,7 +169,7 @@ src/app/
 
 ---
 
-## 🔧 Dépannage
+## Dépannage
 
 ### Problèmes courants
 
