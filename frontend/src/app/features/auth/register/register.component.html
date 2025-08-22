@@ -9,29 +9,50 @@
       <a [routerLink]="'/auth/register'" routerLinkActive="active">Register</a>
     </div>
     
-
     <h2>Create an account</h2>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Username -->
       <label>Username</label>
       <input type="text" formControlName="nom" placeholder="Choose a username" />
+      <div *ngIf="hasError('nom')" class="field-error">
+        {{ getErrorMessage('nom') }}
+      </div>
 
+      <!-- Email -->
       <label>Email</label>
       <input type="email" formControlName="email" placeholder="Enter your email address" />
+      <div *ngIf="hasError('email')" class="field-error">
+        {{ getErrorMessage('email') }}
+      </div>
 
+      <!-- Password -->
       <label>Password</label>
       <input type="password" formControlName="motDePasse" placeholder="Create a password" />
+      <div *ngIf="hasError('motDePasse')" class="field-error">
+        {{ getErrorMessage('motDePasse') }}
+      </div>
 
+      <!-- City -->
       <label>City</label>
       <input type="text" formControlName="ville" placeholder="Enter your city" />
+      <div *ngIf="hasError('ville')" class="field-error">
+        {{ getErrorMessage('ville') }}
+      </div>
 
-      <button type="submit" [disabled]="registerForm.invalid">Create Account</button>
+      <!-- Submit button -->
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+      </button>
 
-      <div *ngIf="successMessage" style="background:#dcfce7; color:#166534; padding: 1rem; margin-top:1rem; border-radius: 5px;">
+      <!-- Success message -->
+      <div *ngIf="successMessage" class="success-message">
         {{ successMessage }}
       </div>
 
-      <div *ngIf="errorMessage" style="background:#fee2e2; color:#991b1b; padding: 1rem; margin-top:1rem; border-radius: 5px;">
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
       </div>
 

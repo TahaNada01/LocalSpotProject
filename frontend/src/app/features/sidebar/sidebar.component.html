@@ -1,6 +1,6 @@
 <div class="sidebar">
   <!-- Partie supérieure scrollable -->
-  <div>
+  <div class="sidebar-content">
     <div class="logo">LocalSpot</div>
 
     <div class="nav-links">
@@ -30,14 +30,10 @@
     </div>
   </div>
 
-  <!-- Partie inférieure fixe (non scrollable) -->
-  <div>
-    <div class="nav-link" (click)="toggleDarkMode()">
-      <i class="fa fa-moon"></i> Dark Mode
-    </div>
-
-    <div class="nav-link" (click)="logout()">
-      <i class="fa fa-sign-out"></i> Logout
+  <!-- Partie inférieure fixe (logout) -->
+  <div class="sidebar-footer">
+    <div class="nav-link logout-btn" (click)="logout()">
+      <i class="fa fa-sign-out-alt"></i> Logout
     </div>
   </div>
 </div>

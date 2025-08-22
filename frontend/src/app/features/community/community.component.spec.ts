@@ -203,24 +203,42 @@ describe('CommunityComponent', () => {
     const closedPlace: Partial<PublicPlace> = {
       id: 2,
       name: 'Closed Place',
-      openingHoursJson: '{"mon":{"closed":true}}'
+      openingHoursJson: JSON.stringify({
+        mon: { closed: true }
+      })
     };
+    
+    // Mock current day as Monday
+    jasmine.clock().install();
+    const monday = new Date(2024, 0, 1, 12, 0); // January 1, 2024 is a Monday
+    jasmine.clock().mockDate(monday);
     
     const status = component.openStatus(closedPlace as PublicPlace);
     expect(status.text).toBe('Closed now');
     expect(status.cls).toBe('closed');
+    
+    jasmine.clock().uninstall();
   });
 
   it('should handle 24/7 status correctly', () => {
     const alwaysOpenPlace: Partial<PublicPlace> = {
       id: 3,
       name: 'Always Open',
-      openingHoursJson: '{"mon":{"allDay":true}}'
+      openingHoursJson: JSON.stringify({
+        mon: { allDay: true }
+      })
     };
+    
+    // Mock current day as Monday
+    jasmine.clock().install();
+    const monday = new Date(2024, 0, 1, 12, 0); // January 1, 2024 is a Monday
+    jasmine.clock().mockDate(monday);
     
     const status = component.openStatus(alwaysOpenPlace as PublicPlace);
     expect(status.text).toBe('Open 24/7');
     expect(status.cls).toBe('allday');
+    
+    jasmine.clock().uninstall();
   });
 
   it('should handle unknown hours correctly', () => {

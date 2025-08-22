@@ -118,6 +118,10 @@
 - Attributs aria-label pour les actions
 - Textes alternatifs pour les images
 
+**Tests Lighthouse :**
+- Audit réalisé avec Google Lighthouse sur les pages du site
+- Résultats supérieurs à 94% , permet de garantir un site rapide, accessible et conforme aux standards de sécurité  et  de qualité
+
 
 ---
 

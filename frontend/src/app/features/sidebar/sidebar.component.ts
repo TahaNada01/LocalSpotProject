@@ -18,20 +18,27 @@ export class SidebarComponent {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to log out?',
+      icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#7c3aed',
-      cancelButtonColor: '#595959',
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
       confirmButtonText: 'Yes, log out',
+      cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem('token');
-        this.router.navigate(['/auth/login']);
+        localStorage.removeItem('refreshToken');
+        
+        Swal.fire({
+          title: 'Logged out!',
+          text: 'You have been successfully logged out.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        }).then(() => {
+          this.router.navigate(['/auth/login']);
+        });
       }
     });
   }
-
-  toggleDarkMode() {
-  document.body.classList.toggle('dark-mode');
-}
-
 }

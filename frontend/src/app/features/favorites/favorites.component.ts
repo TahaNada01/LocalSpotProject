@@ -58,8 +58,8 @@ export class FavoritesComponent implements OnInit {
         this.loadFavorites();
         Swal.fire({
           icon: 'success',
-          title: 'Favori supprimé',
-          text: 'Le lieu a été supprimé de vos favoris.',
+          title: 'Favorite deleted',
+          text: 'The place has been removed from your favorites.',
           confirmButtonText: 'OK',
           confirmButtonColor: '#7c3aed'
         });
