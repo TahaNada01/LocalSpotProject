@@ -83,6 +83,24 @@
       border-radius: 5px;
       background-color: #1e1e1e;
       color: white;
+      transition: border 0.3s ease;
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #7c3aed;
+      }
+
+      &.error {
+        box-shadow: 0 0 0 2px #ef4444;
+      }
+    }
+
+    // Error messages sous les champs
+    .field-error {
+      color: #fca5a5;
+      font-size: 0.85rem;
+      margin-top: 0.4rem;
+      margin-bottom: 0.2rem;
     }
 
     button[type='submit'] {
@@ -94,12 +112,37 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover:not(:disabled) {
+        background-color: #6d28d9;
+      }
 
       &:disabled {
         background-color: #6b21a8;
         cursor: not-allowed;
+        opacity: 0.7;
       }
     }
+  }
+
+  // Messages globaux
+  .success-message {
+    background: #dcfce7;
+    color: #166534;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    border: 1px solid #bbf7d0;
+  }
+
+  .error-message {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    border: 1px solid #fecaca;
   }
 }
 
@@ -138,6 +181,10 @@
   blockquote {
     font-style: italic;
     margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid rgba(255, 255, 255, 0.3);
   }
 
   cite {
@@ -145,5 +192,29 @@
     margin-top: 0.5rem;
     font-style: normal;
     font-weight: bold;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .register-container {
+    flex-direction: column;
+  }
+
+  .register-form {
+    padding: 2rem 1.5rem;
+  }
+
+  .register-info {
+    padding: 2rem 1.5rem;
+  }
+
+  .switch-tabs {
+    flex-direction: column;
+    
+    a + a {
+      margin-left: 0;
+      margin-top: 0.5rem;
+    }
   }
 }

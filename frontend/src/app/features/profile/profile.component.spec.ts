@@ -300,6 +300,6 @@ describe('ProfileComponent', () => {
     fixture.detectChanges();
     
     const tabs = fixture.debugElement.queryAll(By.css('.tab'));
-    expect(tabs.length).toBe(3);
+    expect(tabs.length).toBe(2);
   });
 });

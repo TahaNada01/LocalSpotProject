@@ -13,23 +13,53 @@
     </div>
 
     <button class="edit-btn" (click)="isEditing = !isEditing">
+      <i class="fa fa-edit"></i>
       {{ isEditing ? 'Cancel' : 'Edit Profile' }}
     </button>
   </div>
 
-  <!-- MODAL (édition du profil) -->
+  <!-- MODAL (édition du profil) - AMÉLIORÉ -->
   <div class="modal-backdrop" *ngIf="isEditing" (click)="isEditing = false"></div>
-  <div class="modal" *ngIf="isEditing">
+  <div class="modal edit-profile-modal" *ngIf="isEditing">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Edit Profil</h3>
-      <form (ngSubmit)="onSubmit()" #editForm="ngForm" class="edit-form">
-        <input type="text" name="nom" [(ngModel)]="user.nom" placeholder="Nom" required />
-        <input type="email" name="email" [(ngModel)]="user.email" placeholder="Email" required />
-        <input type="text" name="ville" [(ngModel)]="user.ville" placeholder="Ville" />
-        <input type="password" name="motDePasse" [(ngModel)]="newPassword" placeholder="••••••••" />
+      <div class="modal-header">
+        <h3><i class="fa fa-user-edit"></i> Edit Profile</h3>
+        <button class="close-btn" (click)="isEditing = false">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #editForm="ngForm" class="profile-edit-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nom"><i class="fa fa-user"></i> Full Name</label>
+            <input id="nom" type="text" name="nom" [(ngModel)]="user.nom" placeholder="Enter your full name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email"><i class="fa fa-envelope"></i> Email</label>
+            <input id="email" type="email" name="email" [(ngModel)]="user.email" placeholder="Enter your email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="ville"><i class="fa fa-map-marker-alt"></i> City</label>
+            <input id="ville" type="text" name="ville" [(ngModel)]="user.ville" placeholder="Enter your city" />
+          </div>
+
+          <div class="form-group">
+            <label for="password"><i class="fa fa-lock"></i> New Password</label>
+            <input id="password" type="password" name="motDePasse" [(ngModel)]="newPassword" placeholder="Leave blank to keep current password" />
+            <small class="help-text">Leave blank if you don't want to change your password</small>
+          </div>
+        </div>
+
         <div class="modal-actions">
-          <button type="submit" class="cta">save</button>
-          <button type="button" class="cancel" (click)="isEditing = false">Cancel</button>
+          <button type="submit" class="btn-save">
+            <i class="fa fa-check"></i> Save Changes
+          </button>
+          <button type="button" class="btn-cancel" (click)="isEditing = false">
+            <i class="fa fa-times"></i> Cancel
+          </button>
         </div>
       </form>
     </div>
@@ -37,9 +67,12 @@
 
   <!-- Tabs -->
   <div class="tabs">
-    <div class="tab" [class.active]="activeTab === 'places'" (click)="setActive('places')">Places</div>
-    <div class="tab" [class.active]="activeTab === 'reviews'" (click)="setActive('reviews')">Reviews</div>
-    <div class="tab" [class.active]="activeTab === 'favorites'" (click)="setActive('favorites')">Favoris</div>
+    <div class="tab" [class.active]="activeTab === 'places'" (click)="setActive('places')">
+      <i class="fa fa-map-marker-alt"></i> My Places
+    </div>
+    <div class="tab" [class.active]="activeTab === 'favorites'" (click)="setActive('favorites')">
+      <i class="fa fa-heart"></i> Favorites
+    </div>
   </div>
 
   <!-- PLACES (mes créations) -->
@@ -124,9 +157,16 @@
       </div>
 
       <ng-template #noPlaces>
-        <div class="title">No places yet</div>
-        <div class="desc">You haven't added any places yet.</div>
-        <a class="cta" href="/add">Add Your First Place</a>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fa fa-map-marker-alt"></i>
+          </div>
+          <div class="title">No places yet</div>
+          <div class="desc">You haven't added any places yet. Share your favorite local spots with the community!</div>
+          <a class="cta" routerLink="/add-place">
+            <i class="fa fa-plus"></i> Add Your First Place
+          </a>
+        </div>
       </ng-template>
     </ng-container>
   </div>
@@ -146,8 +186,13 @@
     </div>
 
     <ng-template #noFavorites>
-      <div class="title">No favorites yet</div>
-      <div class="desc">You haven't added any favorites yet.</div>
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fa fa-heart"></i>
+        </div>
+        <div class="title">No favorites yet</div>
+        <div class="desc">Start exploring and add places to your favorites to see them here.</div>
+      </div>
     </ng-template>
   </div>
 </div>
@@ -156,7 +201,12 @@
 <div class="modal-backdrop" *ngIf="editOpen" (click)="cancelEdit()"></div>
 <div class="modal modal-wide" *ngIf="editOpen">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <h3>Edit place</h3>
+    <div class="modal-header">
+      <h3><i class="fa fa-edit"></i> Edit place</h3>
+      <button class="close-btn" (click)="cancelEdit()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
 
     <form (ngSubmit)="submitEdit()" #placeForm="ngForm" class="edit-form">
       <div class="edit-grid">
@@ -240,10 +290,14 @@
       </div>
 
       <div class="modal-actions">
-        <button type="submit" class="cta" [disabled]="savingEdit">{{ savingEdit ? 'Saving…' : 'Save' }}</button>
-        <button type="button" class="cancel" (click)="cancelEdit()">Cancel</button>
+        <button type="submit" class="btn-save" [disabled]="savingEdit">
+          <i class="fa fa-check"></i>
+          {{ savingEdit ? 'Saving…' : 'Save' }}
+        </button>
+        <button type="button" class="btn-cancel" (click)="cancelEdit()">
+          <i class="fa fa-times"></i> Cancel
+        </button>
       </div>
     </form>
   </div>
 </div>
-

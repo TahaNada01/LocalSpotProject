@@ -1,19 +1,119 @@
-<div class="search-container">
-  <div class="input-wrapper">
-    <input
-      type="text"
-      [(ngModel)]="searchQuery"
-      placeholder="Rechercher un lieu..."
-      (input)="onSearchChange()"
-      (keydown.enter)="onEnter($event)"
-    />
-    <button class="clear-btn" *ngIf="searchQuery" (click)="clearSearch()">×</button>
+<div class="map-container">
+  <!-- Header avec titre -->
+  <div class="map-header">
+    <div class="header-content">
+      <div class="title-section">
+        <i class="fa fa-map-marked-alt map-icon"></i>
+        <div>
+          <h1 class="map-title">Explore Locations</h1>
+          <p class="map-subtitle">Find and navigate to your favorite places</p>
+        </div>
+      </div>
+      
+      <!-- Search container amélioré -->
+      <div class="search-container">
+        <div class="search-wrapper">
+          <div class="search-icon">
+            <i class="fa fa-search"></i>
+          </div>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="Search for places, addresses, landmarks..."
+            (input)="onSearchChange()"
+            (keydown.enter)="onEnter($event)"
+            class="search-input"
+            aria-label="Search for locations"
+          />
+          <button 
+            class="clear-btn" 
+            *ngIf="searchQuery" 
+            (click)="clearSearch()"
+            aria-label="Clear search"
+          >
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Suggestions améliorées -->
+        <div class="suggestions-container" *ngIf="suggestions.length > 0">
+          <ul class="suggestions" role="listbox" aria-label="Location suggestions">
+            <li 
+              *ngFor="let suggestion of suggestions; let i = index" 
+              (click)="selectPlace(suggestion)"
+              (keydown.enter)="selectPlace(suggestion)"
+              [attr.aria-selected]="i === 0"
+              role="option"
+              class="suggestion-item"
+              tabindex="0"
+            >
+              <i class="fa fa-map-marker-alt suggestion-icon"></i>
+              <div class="suggestion-content">
+                <span class="suggestion-name">{{ suggestion.displayName.text }}</span>
+                <small class="suggestion-type">Location</small>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <ul class="suggestions" *ngIf="suggestions.length > 0">
-    <li *ngFor="let suggestion of suggestions" (click)="selectPlace(suggestion)">
-      {{ suggestion.displayName.text }}
-    </li>
-  </ul>
+  <!-- Map container avec loading state -->
+  <div class="map-wrapper">
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-content">
+        <div class="spinner"></div>
+        <p>Loading map...</p>
+      </div>
+    </div>
+    
+    <div 
+      id="map" 
+      role="application" 
+      aria-label="Interactive map showing locations"
+      [class.map-loading]="isLoading"
+    ></div>
+
+    <!-- Map controls overlay -->
+    <div class="map-controls">
+      <button 
+        class="control-btn" 
+        (click)="centerOnCurrentLocation()"
+        aria-label="Center map on current location"
+        title="My Location"
+      >
+        <i class="fa fa-crosshairs"></i>
+      </button>
+      
+      <button 
+        class="control-btn" 
+        (click)="toggleMapType()"
+        aria-label="Toggle map view type"
+        title="Toggle Satellite/Street View"
+      >
+        <i class="fa fa-layer-group"></i>
+      </button>
+    </div>
+
+    <!-- Current location info -->
+    <div class="location-info" *ngIf="currentLocation">
+      <div class="info-card">
+        <i class="fa fa-map-marker-alt info-icon"></i>
+        <div class="info-content">
+          <h3 class="location-name">{{ currentLocation.name }}</h3>
+          <p class="location-address" *ngIf="currentLocation.address">
+            {{ currentLocation.address }}
+          </p>
+        </div>
+        <button 
+          class="close-info" 
+          (click)="currentLocation = null"
+          aria-label="Close location info"
+        >
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
-<div id="map"></div>
